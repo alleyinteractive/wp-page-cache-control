@@ -4,10 +4,10 @@
  *
  * phpcs:disable phpcs:ignore Squiz.PHP.CommentedOutCode.Found
  *
- * @package create-wordpress-plugin
+ * @package wp-page-cache-control
  */
 
-namespace Create_WordPress_Plugin;
+namespace Alley\WP\WP_Page_Cache_Control;
 
 // Register and enqueue assets.
 add_action( 'wp_enqueue_scripts', __NAMESPACE__ . '\action_wp_enqueue_scripts' );
@@ -33,13 +33,13 @@ function action_wp_enqueue_scripts(): void {
 	*/
 
 	// wp_enqueue_script(
-	// 	'create-wordpress-plugin-example-entry',
+	// 	'wp-page-cache-control-example-entry',
 	// 	get_entry_asset_url( 'example-entry' ),
 	// 	get_asset_dependency_array( 'example-entry' ),
 	// 	get_asset_version( 'example-entry' ),
 	// 	true
 	// );
-	// wp_set_script_translations( 'create-wordpress-plugin-example-entry', 'create-wordpress-plugin' );
+	// wp_set_script_translations( 'wp-page-cache-control-example-entry', 'wp-page-cache-control' );
 }
 
 /**
@@ -57,13 +57,13 @@ function action_admin_enqueue_scripts(): void {
 	*/
 
 	// wp_enqueue_script(
-	// 	'create-wordpress-plugin-admin-handle',
+	// 	'wp-page-cache-control-admin-handle',
 	// 	get_entry_asset_url( 'admin-handle' ),
 	// 	get_asset_dependency_array( 'admin-handle' ),
 	// 	get_asset_version( 'admin-handle' ),
 	// 	true
 	// );
-	// wp_set_script_translations( 'create-wordpress-plugin-admin-handle', 'create-wordpress-plugin' );
+	// wp_set_script_translations( 'wp-page-cache-control-admin-handle', 'wp-page-cache-control' );
 }
 
 /**
@@ -81,13 +81,13 @@ function action_enqueue_block_editor_assets(): void {
 	*/
 
 	// wp_enqueue_script(
-	// 	'create-wordpress-plugin-slotfills',
+	// 	'wp-page-cache-control-slotfills',
 	// 	get_entry_asset_url( 'slotfills' ),
 	// 	get_asset_dependency_array( 'slotfills' ),
 	// 	get_asset_version( 'slotfills' ),
 	// 	true
 	// );
-	// wp_set_script_translations( 'create-wordpress-plugin-slotfills', 'create-wordpress-plugin' );
+	// wp_set_script_translations( 'wp-page-cache-control-slotfills', 'wp-page-cache-control' );
 }
 
 /**
@@ -112,7 +112,7 @@ function get_entry_dir_path( string $dir_entry_name, bool $dir = false ): string
 	// The relative path from the plugin root.
 	$asset_build_dir = "/build/{$dir_entry_name}/";
 	// Set the absolute file path from the root directory.
-	$asset_dir_path = CREATE_WORDPRESS_PLUGIN_DIR . $asset_build_dir;
+	$asset_dir_path = WP_PAGE_CACHE_CONTROL_DIR . $asset_build_dir;
 
 	if ( validate_path( $asset_dir_path ) ) {
 		// Negotiate the base path.
@@ -196,7 +196,7 @@ function get_entry_asset_url( string $dir_entry_name, $filename = 'index.js' ) {
  * Load the php index files from the build directory for blocks, slotfills, and any other scripts with an index.php file.
  */
 function load_scripts(): void {
-	$files = glob( CREATE_WORDPRESS_PLUGIN_DIR . '/build/**/index.php' );
+	$files = glob( WP_PAGE_CACHE_CONTROL_DIR . '/build/**/index.php' );
 
 	if ( ! empty( $files ) ) {
 		foreach ( $files as $path ) {

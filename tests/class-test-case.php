@@ -1,10 +1,10 @@
 <?php
-namespace Create_WordPress_Plugin\Tests;
+namespace Alley\WP\WP_Page_Cache_Control\Tests;
 
 use Mantle\Testkit\Test_Case as TestkitTest_Case;
 
 /**
- * Create WordPress Plugin Base Test Case
+ * WP Page Cache Control Base Test Case
  */
 abstract class Test_Case extends TestkitTest_Case {
 

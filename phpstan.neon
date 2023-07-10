@@ -6,10 +6,9 @@ parameters:
 	level: max
 
 	paths:
-		- blocks/
 		- entries/
 		- src/
-		- plugin.php
+		- wp-page-cache-control.php
 
 #    ignoreErrors:
 #        - '#PHPDoc tag @var#'

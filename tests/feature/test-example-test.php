@@ -1,7 +1,7 @@
 <?php
-namespace Create_WordPress_Plugin\Tests\Feature;
+namespace Alley\WP\WP_Page_Cache_Control\Tests\Feature;
 
-use Create_WordPress_Plugin\Tests\Test_Case;
+use Alley\WP\WP_Page_Cache_Control\Tests\Test_Case;
 
 /**
  * Visit {@see https://mantle.alley.co/testing/test-framework.html} to learn more.

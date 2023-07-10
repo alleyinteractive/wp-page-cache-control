@@ -1,21 +1,21 @@
 <?php
 /**
- * Plugin Name: Create WordPress Plugin
- * Plugin URI: https://github.com/alleyinteractive/create-wordpress-plugin
- * Description: A skeleton WordPress plugin
+ * Plugin Name: WP Page Cache Control
+ * Plugin URI: https://github.com/alleyinteractive/wp-page-cache-control
+ * Description: Control and modify the page cache for multiple hosting providers.
  * Version: 0.1.0
- * Author: author_name
- * Author URI: https://github.com/alleyinteractive/create-wordpress-plugin
+ * Author: Sean Fisher
+ * Author URI: https://github.com/alleyinteractive/wp-page-cache-control
  * Requires at least: 5.9
  * Tested up to: 6.2
  *
- * Text Domain: create-wordpress-plugin
+ * Text Domain: wp-page-cache-control
  * Domain Path: /languages/
  *
- * @package create-wordpress-plugin
+ * @package wp-page-cache-control
  */
 
-namespace Create_WordPress_Plugin;
+namespace Alley\WP\WP_Page_Cache_Control;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -24,9 +24,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Root directory to this plugin.
  */
-define( 'CREATE_WORDPRESS_PLUGIN_DIR', __DIR__ );
-
-/* Start Composer Loader */
+define( 'WP_PAGE_CACHE_CONTROL_DIR', __DIR__ );
 
 // Check if Composer is installed (remove if Composer is not required for your plugin).
 if ( ! file_exists( __DIR__ . '/vendor/autoload.php' ) ) {
@@ -40,7 +38,7 @@ if ( ! file_exists( __DIR__ . '/vendor/autoload.php' ) ) {
 			function() {
 				?>
 				<div class="notice notice-error">
-					<p><?php esc_html_e( 'Composer is not installed and create-wordpress-plugin cannot load. Try using a `*-built` branch if the plugin is being loaded as a submodule.', 'create-wordpress-plugin' ); ?></p>
+					<p><?php esc_html_e( 'Composer is not installed and wp-page-cache-control cannot load. Try using a `*-built` branch if the plugin is being loaded as a submodule.', 'wp-page-cache-control' ); ?></p>
 				</div>
 				<?php
 			}
@@ -53,11 +51,8 @@ if ( ! file_exists( __DIR__ . '/vendor/autoload.php' ) ) {
 	require_once __DIR__ . '/vendor/autoload.php';
 }
 
-/* End Composer Loader */
-
 // Load the plugin's main files.
 require_once __DIR__ . '/src/assets.php';
-require_once __DIR__ . '/src/meta.php';
 
 /**
  * Instantiate the plugin.

@@ -1,5 +1,5 @@
 <?php
-namespace Create_WordPress_Plugin\Tests\Unit;
+namespace Alley\WP\WP_Page_Cache_Control\Tests\Unit;
 
 use PHPUnit\Framework\TestCase;
 
