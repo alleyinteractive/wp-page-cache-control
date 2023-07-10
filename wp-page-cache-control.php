@@ -15,7 +15,7 @@
  * @package wp-page-cache-control
  */
 
-namespace Alley\WP\WP_Page_Cache_Control;
+use WP_Page_Cache_Control\Providers\Provider;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -55,9 +55,33 @@ if ( ! file_exists( __DIR__ . '/vendor/autoload.php' ) ) {
 require_once __DIR__ . '/src/assets.php';
 
 /**
- * Instantiate the plugin.
+ * Retrieve the cache provider.
  */
-function main(): void {
-	// ...
+function wp_page_cache_control(): Provider {
+	if ( ! isset( Provider::$instance ) ) {
+		$provider = apply_filters( 'wp_page_cache_control_provider', detect_provider() );
+
+		if ( ! class_exists( $provider ) ) {
+			throw new InvalidArgumentException(
+				"Invalid provider class provided. Expected class to exist: {$provider}",
+			);
+		}
+
+		dd($provider);
+	}
 }
-main();
+add_action( 'muplugins_loaded', __NAMESPACE__ . '\\wp_page_cache_control' );
+
+
+/**
+ * Detect the default provider class.
+ *
+ * @return class-string<\WP_Page_Cache_Control\Providers\Provider>
+ */
+function detect_provider(): string {
+	if ( defined( 'WPCOM_IS_VIP_ENV' ) && WPCOM_IS_VIP_ENV ) {
+		// return \WP_Page_Cache_Control\Providers\WPCOM::class;
+	}
+
+	return \WP_Page_Cache_Control\Providers\Testable_Provider::class;
+}
