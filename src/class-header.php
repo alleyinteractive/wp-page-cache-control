@@ -144,6 +144,10 @@ class Header {
 					return $response;
 				}
 
+				if ( headers_sent() ) {
+					return $response;
+				}
+
 				$method = $request->get_method();
 
 				if ( ! in_array( $method, [ 'GET', 'HEAD' ], true ) ) {

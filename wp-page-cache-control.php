@@ -90,5 +90,15 @@ function wp_page_cache_control(): Provider {
 }
 add_action( 'muplugins_loaded', __NAMESPACE__ . '\\wp_page_cache_control' ); // @phpstan-ignore-line should not return anything
 
-// Setup the default header handler on the `send_headers` action.
-add_action( 'send_headers', [ Header::class, 'send_headers' ] );
+/**
+ * Setup the header handler to send the headers on the 'send_headers' action.
+ * Also, setup the cache provider to fire their headers as well. Runs late to
+ * catch any changes that may happen earlier in 'send_headers'.
+ */
+function wp_page_cache_control_send_headers() {
+	wp_page_cache_control()->send_headers();
+
+	Header::send_headers();
+	dd('SEND HEADERS');
+}
+add_action( 'send_headers', __NAMESPACE__ . '\\wp_page_cache_control_send_headers', PHP_INT_MAX );

@@ -432,6 +432,8 @@ class Pantheon_Provider implements Provider {
 			->each(
 				fn ( string $value, string $name ) => $this->set_cookie( $name, $value ),
 			);
+
+		$this->should_update_group_cookies = false;
 	}
 
 	/**
