@@ -13,7 +13,7 @@ class Test_Pantheon_Provider extends Test_Case {
 		parent::setUp();
 
 		// TODO: setup CI to run tests with Pantheon Provider.
-		if ( ! class_exists( Pantheon_Provider::class ) ) {
+		if ( ! function_exists( 'pantheon_wp_clear_edge_all' ) ) {
 			$this->markTestSkipped( 'Pantheon Provider not loaded' );
 		}
 
