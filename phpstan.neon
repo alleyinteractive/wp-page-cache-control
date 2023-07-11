@@ -11,6 +11,8 @@ parameters:
         - wp-page-cache-control.php
 
     scanFiles:
+        - tests/stubs/pantheon/pantheon-advanced-page-cache-inc.stub
+        - tests/stubs/pantheon/pantheon-advanced-page-cache.stub
         - tests/stubs/vip/vary-cache.stub
         - tests/stubs/vip/vip-cache-manager-api.stub
         - tests/stubs/vip/vip-cache-manager.stub
@@ -21,5 +23,3 @@ parameters:
 #
     excludePaths:
         - tests/stubs/*
-#
-#    checkMissingIterableValueType: false
