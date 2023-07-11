@@ -2,18 +2,24 @@ includes:
   - vendor/szepeviktor/phpstan-wordpress/extension.neon
 
 parameters:
-	# Level 9 is the highest level
-	level: max
+    # Level 9 is the highest level
+    level: max
 
-	paths:
-		- entries/
-		- src/
-		- wp-page-cache-control.php
+    paths:
+        - entries/
+        - src/
+        - wp-page-cache-control.php
+
+    scanFiles:
+        - tests/stubs/vip/vary-cache.stub
+        - tests/stubs/vip/vip-cache-manager-api.stub
+        - tests/stubs/vip/vip-cache-manager.stub
+        - tests/stubs/vip/vip-request-block.stub
 
 #    ignoreErrors:
 #        - '#PHPDoc tag @var#'
 #
-#    excludePaths:
-#        - ./*/*/FileToBeExcluded.php
+    excludePaths:
+        - tests/stubs/*
 #
 #    checkMissingIterableValueType: false

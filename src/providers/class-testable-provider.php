@@ -45,28 +45,28 @@ class Testable_Provider implements Provider {
 	/**
 	 * The cache groups that have been registered.
 	 *
-	 * @var array
+	 * @var array<string, string>
 	 */
 	protected array $groups = [];
 
 	/**
 	 * The IP addresses that are blocked from accessing the cache.
 	 *
-	 * @var array
+	 * @var array<int, string>
 	 */
 	protected array $blocked_ips = [];
 
 	/**
 	 * The user agents that are blocked from accessing the cache.
 	 *
-	 * @var array
+	 * @var array<int, string>
 	 */
 	protected array $blocked_user_agents = [];
 
 	/**
 	 * The URLs that have been purged from the cache.
 	 *
-	 * @var array
+	 * @var array<int, string>
 	 */
 	protected array $purged_urls = [];
 
@@ -314,13 +314,15 @@ class Testable_Provider implements Provider {
 			return;
 		}
 
-		$this->purge( get_term_link( $term ) );
+		$link = get_term_link( $term );
+
+		if ( ! is_wp_error( $link ) ) {
+			$this->purge( $link );
+		}
 	}
 
 	/**
 	 * Flush the entire page cache.
-	 *
-	 * **WARNING:** This will purge the entire page cache. Use with caution.
 	 */
 	public function flush(): void {
 		$this->did_flush_cache = true;

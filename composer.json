@@ -21,7 +21,8 @@
     "require-dev": {
         "alleyinteractive/alley-coding-standards": "^1.0",
         "mantle-framework/testkit": "^0.11",
-        "szepeviktor/phpstan-wordpress": "^1.1"
+        "szepeviktor/phpstan-wordpress": "^1.1",
+        "wp-coding-standards/wpcs": "dev-php-8-1 as 2.3.x-dev"
     },
     "config": {
         "allow-plugins": {
@@ -44,6 +45,12 @@
             "autoload-dev": {
                 "Alley\\WP\\WP_Page_Cache_Control\\Tests": "tests"
             }
+        }
+    },
+    "repositories": {
+        "wpcs": {
+            "type": "vcs",
+            "url": "https://github.com/alleyinteractive/WordPress-Coding-Standards"
         }
     },
     "minimum-stability": "dev",

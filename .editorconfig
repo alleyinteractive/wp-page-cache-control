@@ -17,6 +17,11 @@ indent_size = 2
 indent_style = space
 indent_size = 4
 
+# PHPStan NEON files
+[*.neon]
+indent_style = space
+indent_size = 4
+
 # Dotfiles
 [.*]
 indent_style = space

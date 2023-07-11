@@ -66,6 +66,8 @@ static $wp_page_cache_control_provider = null;
 /**
  * Retrieve the cache provider instance.
  *
+ * @throws InvalidArgumentException If the provider class does not exist.
+ *
  * @return Provider
  */
 function wp_page_cache_control(): Provider {
@@ -85,4 +87,4 @@ function wp_page_cache_control(): Provider {
 
 	return $wp_page_cache_control_provider;
 }
-add_action( 'muplugins_loaded', __NAMESPACE__ . '\\wp_page_cache_control' );
+add_action( 'muplugins_loaded', __NAMESPACE__ . '\\wp_page_cache_control' ); // @phpstan-ignore-line should not return anything

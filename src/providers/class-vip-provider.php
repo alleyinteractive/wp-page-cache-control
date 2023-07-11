@@ -21,6 +21,8 @@ use WPCOM_VIP_Cache_Manager;
 class VIP_Provider implements Provider {
 	/**
 	 * Constructor.
+	 *
+	 * @throws InvalidArgumentException If the Vary_Cache class does not exist.
 	 */
 	public function __construct() {
 		// Ensure Vary_Cache is loaded if it exists.

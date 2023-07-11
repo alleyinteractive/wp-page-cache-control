@@ -1,0 +1,216 @@
+<?php
+
+namespace Automattic\VIP\Cache;
+
+class Vary_Cache
+{
+    const COOKIE_NOCACHE = 'vip-go-cb';
+    const COOKIE_SEGMENT = 'vip-go-seg';
+    const COOKIE_AUTH = 'vip-go-auth';
+    const HEADER_AUTH = 'HTTP_X_VIP_GO_AUTH';
+    // Allowed values in cookie are alphanumerics (A-Za-z0-9) and underscore (_) and hyphen (-).
+    const GROUP_SEPARATOR = '---__';
+    const VALUE_SEPARATOR = '_--_';
+    const VERSION_PREFIX = 'vc-v1__';
+    /**
+     * Check if the user is in nocache mode.
+     *
+     * Should only be used after the `init` hook.
+     *
+     * @since   1.0.0
+     * @access  public
+     *
+     * @return boolean
+     */
+    public static function is_user_in_nocache()
+    {
+    }
+    /**
+     * Add nocache cookie for the user.
+     *
+     * This bypasses all requests from the VIP Cache.
+     *
+     * @since   1.0.0
+     * @access  public
+     *
+     * @return boolean|WP_Error
+     */
+    public static function set_nocache_for_user()
+    {
+    }
+    /**
+     * Clears the nocache cookie for the user.
+     *
+     * Restores caching behaviour for all future requests.
+     *
+     * @since   1.0.0
+     * @access  public
+     *
+     * @return boolean|WP_Error
+     */
+    public static function remove_nocache_for_user()
+    {
+    }
+    /**
+     * Convenience function to init the class.
+     *
+     * @access private
+     */
+    public static function load()
+    {
+    }
+    /**
+     * Convenience function to reset the class.
+     *
+     * Primarily used to unit tests.
+     *
+     * @access private
+     */
+    public static function unload()
+    {
+    }
+    /**
+     * Adds custom filters required at the beginning and end of the plugin lifecycle
+     *
+     * @access private
+     */
+    protected static function add_filters()
+    {
+    }
+    /**
+     * Removes the custom filters
+     *
+     * @access private
+     */
+    protected static function remove_filters()
+    {
+    }
+    /**
+     * Set request to indicate the request will vary on one or more groups.
+     *
+     * @since   1.0.0
+     * @access  public
+     *
+     * @param  array $groups  One or more groups to vary on.
+     * @return boolean
+     */
+    public static function register_groups(array $groups)
+    {
+    }
+    /**
+     * Set request to indicate the request will vary on a group.
+     *
+     * Convenience version of `register_groups`.
+     *
+     * @since   1.0.0
+     * @access  public
+     *
+     * @param  string $group A group to vary on.
+     * @return boolean
+     */
+    public static function register_group(string $group)
+    {
+    }
+    /**
+     * Assigns the user to given group and optionally a value for that group. E.g. location=US
+     *
+     * @since   1.0.0
+     * @access  public
+     *
+     * @param  string $group  Group name to vary the request on.
+     * @param  string $value A value for the group.
+     * @return \WP_Error|boolean
+     */
+    public static function set_group_for_user($group, $value)
+    {
+    }
+    /**
+     * Checks if the request has a group cookie matching a given group, regardless of segment value.
+     *
+     * @since   1.0.0
+     * @access  public
+     *
+     * @param  string $group Group name.
+     *
+     * @return bool   True on success. False on failure.
+     */
+    public static function is_user_in_group($group)
+    {
+    }
+    /**
+     * Checks if the request has a group cookie matching a given group and segment. e.g. 'dev-group', 'yes'
+     *
+     * @since   1.0.0
+     * @access  public
+     *
+     * @param  string $group Group name.
+     * @param  string $segment Which segment within the group to check.
+     *
+     * @return bool   True on success. False on failure.
+     */
+    public static function is_user_in_group_segment($group, $segment)
+    {
+    }
+    /**
+     * Returns the associated groups for the request.
+     *
+     * @since   1.0.0
+     * @access  public
+     *
+     * @return array  user's group-value pairs
+     */
+    public static function get_groups()
+    {
+    }
+    /**
+     * Sets the context of the the group segmentation to be encrypted or not.
+     *
+     * @since   1.0.0
+     * @access  public
+     *
+     * @return WP_Error|null
+     */
+    public static function enable_encryption()
+    {
+    }
+    /**
+     * Returns the encryption flag
+     *
+     * @since   1.0.0
+     * @access  public
+     *
+     * @return bool true if encryption is set for this request
+     */
+    public static function is_encryption_enabled()
+    {
+    }
+    /**
+     * Parses our nocache and group cookies.
+     *
+     * @since   1.0.0
+     * @access  private
+     */
+    public static function parse_cookies()
+    {
+    }
+    /**
+     * Adjust the default cookie expiry.
+     *
+     * @since   1.0.0
+     * @access  public
+     *
+     * @param int $expiry Seconds in the future when the cookie should expire (e.g. MONTH_IN_SECONDS). Must be more than 1 hour.
+     */
+    public static function set_cookie_expiry(int $expiry)
+    {
+    }
+    /**
+     * Sends headers (if needed).
+     *
+     * @since   1.0.0
+     * @access  private
+     */
+    public static function send_headers()
+    {
+    }
+}

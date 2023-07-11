@@ -1,0 +1,71 @@
+<?php
+
+/**
+ * Convenience class to quickly block unwanted clients at origin (not edges) based on a user agent, IP, or a header.
+ *
+ * 🛑 THIS IS LOADED EARLY, PURE PHP ONLY, CORE IS NOT AVAILABLE YET!!! 🛑
+ *
+ * Example usage, somewhere in `vip-config/vip-config.php`:
+ *
+ * To block by IP:
+ * VIP_Request_Block::ip( '13.37.13.37' );
+ *
+ * To block by User Agent:
+ * VIP_Request_Block::ua( 'Fuzz Faster U Fool v1.337' );
+ *
+ * To block by header:
+ * VIP_Request_Block::header( 'x-my-header', 'my-header-value' );
+ */
+class VIP_Request_Block
+{
+    /**
+     * Block a specific IP based either on true-client-ip, falling back to x-forwarded-for
+     *
+     * 🛑 BE CAREFUL: blocking a reverse proxy IP instead of the client's IP will result in legitimate traffic being blocked!!!
+     * 🛑 ALWAYS: use `whois {IP}` to look up the IP before making the changes.
+     *
+     * @param string $value target IP address to be blocked.
+     * @return bool|void
+     */
+    public static function ip(string $value)
+    {
+    }
+    /**
+     * Block by exact match of the user agent header
+     *
+     * @param string $user_agent target user agent to be blocked.
+     * @return void|bool
+     */
+    public static function ua(string $user_agent)
+    {
+    }
+    /**
+     * Block by partial match of the user agent header
+     *
+     * @param string $user_agent_substring target user agent to be blocked.
+     * @return void|bool
+     */
+    public static function ua_partial_match(string $user_agent_substring)
+    {
+    }
+    /**
+     * Block by exact match for an arbitrary header.
+     *
+     * @param string $header HTTP header.
+     * @param string $value header value.
+     * @return void|bool
+     */
+    public static function header(string $header, string $value)
+    {
+    }
+    /**
+     * Block the request and error_log for audit purposes.
+     *
+     * @param string $value value of the header for a block.
+     * @param string $criteria header field used for a block.
+     * @return true|void
+     */
+    public static function block_and_log(string $value, string $criteria)
+    {
+    }
+}

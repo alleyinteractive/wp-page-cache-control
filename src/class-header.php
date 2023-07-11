@@ -2,6 +2,8 @@
 /**
  * Header class file
  *
+ * phpcs:disable WordPress.NamingConventions.ValidFunctionName.MethodNameInvalid
+ *
  * @package wp-page-cache-control
  */
 
@@ -48,7 +50,7 @@ class Header {
 	 * Send a response header.
 	 *
 	 * @param string|array<string, string> $header The header(s) to send.
-	 * @param string $value                        The value of the header.
+	 * @param string                       $value                        The value of the header.
 	 */
 	public static function send( array|string $header, string $value = '' ): void {
 		if ( is_array( $header ) ) {
@@ -67,7 +69,7 @@ class Header {
 			if ( headers_sent() ) {
 				_doing_it_wrong(
 					__CLASS__ . '::' . __FUNCTION__,
-					'Headers already sent, unable to send header ' . $header . ' with value ' . $value,
+					esc_html( 'Headers already sent, unable to send header ' . $header . ' with value ' . $value ),
 					'1.0.0',
 				);
 
@@ -103,7 +105,7 @@ class Header {
 
 		add_action(
 			'rest_post_dispatch',
-			function ( $response, $server, $request ) use ( $seconds ): WP_REST_Response {
+			function ( $response, $server, $request ) use ( $seconds ) {
 				if ( ! ( $response instanceof WP_REST_Response ) || ! ( $request instanceof WP_REST_Request ) ) {
 					return $response;
 				}
@@ -126,6 +128,7 @@ class Header {
 				return $response;
 			},
 			99,
+			3,
 		);
 	}
 
@@ -159,7 +162,6 @@ class Header {
 
 		if ( empty( static::$record[ $header ] ) ) {
 			Assert::fail( 'Header ' . $header . ' was not sent' );
-			return;
 		}
 
 		if ( is_null( $value ) ) {
@@ -201,7 +203,6 @@ class Header {
 		foreach ( static::$record[ $header ] as $sent_value ) {
 			if ( $value === $sent_value ) {
 				Assert::fail( "Header $header was sent with value $value" );
-				return;
 			}
 		}
 
