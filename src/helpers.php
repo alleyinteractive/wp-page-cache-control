@@ -24,5 +24,12 @@ function detect_provider(): string {
 		return Providers\VIP_Provider::class;
 	}
 
+	if (
+		( defined( 'PANTHEON_ENVIRONMENT' ) && PANTHEON_ENVIRONMENT )
+		|| function_exists( 'pantheon_wp_clear_edge_paths' )
+	) {
+		return Providers\Pantheon_Provider::class;
+	}
+
 	return Providers\Testable_Provider::class;
 }
