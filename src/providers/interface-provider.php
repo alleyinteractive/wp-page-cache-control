@@ -56,6 +56,13 @@ interface Provider {
 	public function enable_cache_for_user(): void;
 
 	/**
+	 * Check if the page cache is disabled for the current request.
+	 *
+	 * @return bool
+	 */
+	public function is_user_cache_disabled(): bool;
+
+	/**
 	 * Register a cache group.
 	 *
 	 * @param array<int, string> $groups The groups to register.

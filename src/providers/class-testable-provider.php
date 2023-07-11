@@ -149,7 +149,7 @@ class Testable_Provider implements Provider {
 	 *
 	 * @return bool
 	 */
-	public function is_cache_disabled(): bool {
+	public function is_user_cache_disabled(): bool {
 		return $this->cache_disabled;
 	}
 
@@ -158,7 +158,7 @@ class Testable_Provider implements Provider {
 	 *
 	 * @return bool
 	 */
-	public function is_cache_disabled_for_user(): bool {
+	public function is_user_cache_disabled_for_user(): bool {
 		return $this->cache_disabled_for_user;
 	}
 

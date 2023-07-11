@@ -1,10 +1,10 @@
 <?php
-namespace Alley\WP\WP_Page_Cache_Control\Tests\Feature;
+namespace Alley\WP\WP_Page_Cache_Control\Tests\Feature\Providers;
 
 use Alley\WP\WP_Page_Cache_Control\Providers\Testable_Provider;
 use Alley\WP\WP_Page_Cache_Control\Tests\Test_Case;
 
-class Test_Provider extends Test_Case {
+class Test_Testable_Provider extends Test_Case {
 	protected Testable_Provider $provider;
 
 	protected function setUp(): void {
@@ -27,13 +27,13 @@ class Test_Provider extends Test_Case {
 	public function test_disable_cache() {
 		wp_page_cache_control()->disable_cache();
 
-		$this->assertTrue( $this->provider->is_cache_disabled() );
+		$this->assertTrue( $this->provider->is_user_cache_disabled() );
 	}
 
 	public function test_disable_cache_for_user() {
 		wp_page_cache_control()->disable_cache_for_user();
 
-		$this->assertTrue( $this->provider->is_cache_disabled_for_user() );
+		$this->assertTrue( $this->provider->is_user_cache_disabled_for_user() );
 	}
 
 	public function test_register_groups() {

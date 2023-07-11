@@ -1,5 +1,5 @@
 <?php
-namespace Alley\WP\WP_Page_Cache_Control\Tests\Feature;
+namespace Alley\WP\WP_Page_Cache_Control\Tests\Feature\Providers;
 
 use Alley\WP\WP_Page_Cache_Control\Header;
 use Alley\WP\WP_Page_Cache_Control\Providers\VIP_Provider;

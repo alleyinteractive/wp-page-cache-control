@@ -17,8 +17,8 @@ abstract class Test_Case extends TestkitTest_Case {
 	protected function tearDown(): void {
 		parent::tearDown();
 
-		global $wp_page_cache_control_provider;
+		$GLOBALS['wp_page_cache_control_provider'] = null;
 
-		$wp_page_cache_control_provider = null;
+		Header::flush();
 	}
 }

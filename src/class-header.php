@@ -26,6 +26,13 @@ class Header {
 	public static array $record = [];
 
 	/**
+	 * Storage of the sent headers.
+	 *
+	 * @var array<string, array<int, string>>
+	 */
+	public static array $sent = [];
+
+	/**
 	 * Flag to indicate whether to fake headers and not send them for testing.
 	 *
 	 * @var bool
@@ -39,11 +46,28 @@ class Header {
 	 * @return void
 	 */
 	public static function fake( bool $fake = true ): void {
-		if ( $fake ) {
-			static::$record = [];
+		static::$fake = $fake;
+	}
+
+	/**
+	 * Flush the record and sent headers.
+	 */
+	public static function flush(): void {
+		static::$record = [];
+		static::$sent   = [];
+	}
+
+	/**
+	 * Determine if any/a specific header has been sent.
+	 *
+	 * @param string|null $header The header to check.
+	 */
+	public static function sent( string|null $header = null ): bool {
+		if ( is_null( $header ) ) {
+			return ! empty( static::$sent );
 		}
 
-		static::$fake = $fake;
+		return isset( static::$sent[ strtolower( $header ) ] );
 	}
 
 	/**
@@ -64,19 +88,29 @@ class Header {
 		$header = strtolower( $header );
 
 		static::$record[ $header ][] = $value;
+	}
 
-		if ( ! static::$fake ) {
-			if ( headers_sent() ) {
-				_doing_it_wrong(
-					__CLASS__ . '::' . __FUNCTION__,
-					esc_html( 'Headers already sent, unable to send header ' . $header . ' with value ' . $value ),
-					'1.0.0',
-				);
+	/**
+	 * Send all queued headers.
+	 */
+	public static function send_headers(): void {
+		// Prevent the headers from being sent if they have already been sent or
+		// if we are faking them.
+		if ( headers_sent() || static::$fake ) {
+			return;
+		}
 
-				return;
+		foreach ( static::$record as $header => $values ) {
+			foreach ( $values as $value ) {
+				// Check if the header has already been sent.
+				if ( in_array( $value, static::$sent[ $header ] ?? [], true ) ) {
+					continue;
+				}
+
+				header( $header . ': ' . $value );
+
+				static::$sent[ $header ][] = $value;
 			}
-
-			header( $header . ': ' . $value );
 		}
 	}
 

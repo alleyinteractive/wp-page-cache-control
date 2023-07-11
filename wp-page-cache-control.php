@@ -15,6 +15,7 @@
  * @package wp-page-cache-control
  */
 
+use Alley\WP\WP_Page_Cache_Control\Header;
 use Alley\WP\WP_Page_Cache_Control\Providers\Provider;
 
 use function Alley\WP\WP_Page_Cache_Control\detect_provider;
@@ -88,3 +89,6 @@ function wp_page_cache_control(): Provider {
 	return $wp_page_cache_control_provider;
 }
 add_action( 'muplugins_loaded', __NAMESPACE__ . '\\wp_page_cache_control' ); // @phpstan-ignore-line should not return anything
+
+// Setup the default header handler on the `send_headers` action.
+add_action( 'send_headers', [ Header::class, 'send_headers' ] );
