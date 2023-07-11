@@ -15,7 +15,6 @@ use WP_Term;
  *
  * @todo Allow URLs to be registered that will be purged when a post/term is purged.
  * @todo Add method to perform the purge of the queued URLs.
- * @todo Add method to send headers (ala send_headers).
  */
 interface Provider {
 	/**
@@ -161,5 +160,5 @@ interface Provider {
 	/**
 	 * Send all headers and cookies for a provider on-demand.
 	 */
-	public function send_headers();
+	public function send_headers(): void;
 }

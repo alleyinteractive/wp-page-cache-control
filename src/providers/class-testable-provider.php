@@ -336,4 +336,11 @@ class Testable_Provider implements Provider {
 	public function is_site_cache_purged(): bool {
 		return $this->did_flush_cache;
 	}
+
+	/**
+	 * Send all headers and cookies for a provider on-demand.
+	 */
+	public function send_headers(): void {
+		// No-op.
+	}
 }

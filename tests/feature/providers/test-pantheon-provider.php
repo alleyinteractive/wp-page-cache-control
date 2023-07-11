@@ -221,50 +221,27 @@ class Test_Pantheon_Provider extends Test_Case {
 		$this->assertEmpty( $plugin->get_cookie_queue() );
 	}
 
-	// public function test_purge() {
-	// 	wp_page_cache_control()->purge( home_url( '/example/' ) );
+	public function test_purge() {
+		$this->expectApplied( 'pantheon_wp_clear_edge_paths' )->with( [ home_url( '/example/' ) ] )->once();
 
-	// 	$this->assertContains(
-	// 		home_url( '/example/' ),
-	// 		WPCOM_VIP_Cache_Manager::instance()->get_queued_purge_urls(),
-	// 	);
-	// }
+		wp_page_cache_control()->purge( home_url( '/example/' ) );
+	}
 
-	// public function test_purge_post() {
-	// 	$post_id = static::factory()->post->create();
+	public function test_purge_post() {
+		$this->expectApplied( 'pantheon_purge_post_with_related' );
 
-	// 	wp_page_cache_control()->purge_post( $post_id );
+		wp_page_cache_control()->purge_post( static::factory()->post->create() );
+	}
 
-	// 	$this->assertContains(
-	// 		get_permalink( $post_id ),
-	// 		WPCOM_VIP_Cache_Manager::instance()->get_queued_purge_urls(),
-	// 	);
-	// }
+	public function test_purge_term() {
+		$this->expectApplied( 'pantheon_purge_term' );
 
-	// public function test_purge_term() {
-	// 	$term_id = static::factory()->term->create();
+		wp_page_cache_control()->purge_term( static::factory()->term->create() );
+	}
 
-	// 	wp_page_cache_control()->purge_term( $term_id );
+	public function test_purge_site_cache() {
+		$this->expectApplied( 'pantheon_wp_clear_edge_all' )->once();
 
-	// 	$this->assertContains(
-	// 		get_term_link( $term_id ),
-	// 		WPCOM_VIP_Cache_Manager::instance()->get_queued_purge_urls(),
-	// 	);
-	// }
-
-	// public function test_purge_site_cache() {
-	// 	wp_page_cache_control()->flush();
-
-	// 	$post_id = static::factory()->post->create();
-
-	// 	wp_page_cache_control()->purge_post( $post_id );
-
-	// 	// It shouldn't have the post URL in the queue because the site cache
-	// 	// was flushed. This is a workaround since the flag is a private
-	// 	// property.
-	// 	$this->assertNotContains(
-	// 		get_permalink( $post_id ),
-	// 		WPCOM_VIP_Cache_Manager::instance()->get_queued_purge_urls(),
-	// 	);
-	// }
+		wp_page_cache_control()->flush();
+	}
 }

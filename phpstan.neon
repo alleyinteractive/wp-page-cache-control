@@ -11,6 +11,7 @@ parameters:
         - wp-page-cache-control.php
 
     scanFiles:
+        - tests/stubs/constants.stub
         - tests/stubs/pantheon/pantheon-advanced-page-cache-inc.stub
         - tests/stubs/pantheon/pantheon-advanced-page-cache.stub
         - tests/stubs/vip/vary-cache.stub

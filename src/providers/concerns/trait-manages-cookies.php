@@ -9,7 +9,7 @@
 
 namespace Alley\WP\WP_Page_Cache_Control\Providers\Concerns;
 
-use function Mantle\Support\Helpers\collect;
+use Mantle\Support\Collection;
 
 /**
  * Trait to manage cookies.
@@ -104,8 +104,8 @@ trait Manages_Cookies {
 	 * @return array<string, string>
 	 */
 	public function get_cookie_queue(): array {
-		return collect( $this->cookie_queue )
-			->map( fn( $cookie ) => $cookie['value'] )
+		return ( new Collection( $this->cookie_queue ) )
+			->map( fn ( $cookie ) => $cookie['value'] )
 			->all();
 	}
 }

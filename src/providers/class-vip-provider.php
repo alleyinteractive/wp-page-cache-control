@@ -85,6 +85,15 @@ class VIP_Provider implements Provider {
 	 *
 	 * @return bool
 	 */
+	public function is_user_cache_disabled(): bool {
+		return Vary_Cache::is_user_in_nocache();
+	}
+
+	/**
+	 * Check if the page cache is disabled for the current request.
+	 *
+	 * @return bool
+	 */
 	public function is_cache_disabled(): bool {
 		return Vary_Cache::is_user_in_nocache();
 	}
@@ -234,7 +243,7 @@ class VIP_Provider implements Provider {
 	/**
 	 * Send all headers and cookies for a provider on-demand.
 	 */
-	public function send_headers() {
+	public function send_headers(): void {
 		Vary_Cache::send_headers();
 	}
 }
