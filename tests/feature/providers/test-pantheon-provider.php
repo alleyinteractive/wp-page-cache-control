@@ -12,6 +12,11 @@ class Test_Pantheon_Provider extends Test_Case {
 	protected function setUp(): void {
 		parent::setUp();
 
+		// TODO: setup CI to run tests with Pantheon Provider.
+		if ( ! class_exists( Pantheon_Provider::class ) ) {
+			$this->markTestSkipped( 'Pantheon Provider not loaded' );
+		}
+
 		add_filter( 'wp_page_cache_control_provider', fn () => Pantheon_Provider::class );
 
 		$this->assertInstanceOf( Pantheon_Provider::class, wp_page_cache_control() );
