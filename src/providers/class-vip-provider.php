@@ -23,20 +23,12 @@ class VIP_Provider implements Provider {
 	 * Constructor.
 	 */
 	public function __construct() {
-		// Ensure Vary_Cache is loaded.
+		// Ensure Vary_Cache is loaded if it exists.
 		if ( ! class_exists( Vary_Cache::class ) && file_exists( WPMU_PLUGIN_DIR . '/cache/class-vary-cache.php' ) ) {
 			require_once WPMU_PLUGIN_DIR . '/cache/class-vary-cache.php';
+		} elseif ( ! class_exists( Vary_Cache::class ) ) {
+			throw new InvalidArgumentException( 'Vary_Cache class not found.' );
 		}
-	}
-
-	/**
-	 * Set the default TTL for the cache for all REST API requests.
-	 *
-	 * @param int $seconds TTL in seconds.
-	 * @return void
-	 */
-	public function ttl_rest_api( int $seconds ): void {
-		Header::rest_max_age( $seconds );
 	}
 
 	/**
@@ -47,6 +39,16 @@ class VIP_Provider implements Provider {
 	 */
 	public function ttl( int $seconds ): void {
 		Header::max_age( $seconds );
+	}
+
+	/**
+	 * Set the default TTL for the cache for all REST API requests.
+	 *
+	 * @param int $seconds TTL in seconds.
+	 * @return void
+	 */
+	public function ttl_rest_api( int $seconds ): void {
+		Header::rest_max_age( $seconds );
 	}
 
 	/**
@@ -65,6 +67,15 @@ class VIP_Provider implements Provider {
 	 */
 	public function disable_cache_for_user(): void {
 		Vary_Cache::set_nocache_for_user();
+	}
+
+	/**
+	 * Enable the page cache for the user for this and all subsequent requests.
+	 *
+	 * @return void
+	 */
+	public function enable_cache_for_user(): void {
+		Vary_Cache::remove_nocache_for_user();
 	}
 
 	/**

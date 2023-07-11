@@ -1,6 +1,6 @@
 <?php
 /**
- * Provider class file
+ * Provider interface file
  *
  * @package wp-page-cache-control
  */
@@ -12,16 +12,12 @@ use WP_Term;
 
 /**
  * Base provider contract.
+ *
+ * @todo Allow URLs to be registered that will be purged when a post/term is purged.
+ * @todo Add method to perform the purge of the queued URLs.
+ * @todo Add method to send headers (ala send_headers).
  */
 interface Provider {
-	/**
-	 * Set the default TTL for the cache for all REST API requests.
-	 *
-	 * @param int $seconds TTL in seconds.
-	 * @return void
-	 */
-	public function ttl_rest_api( int $seconds ): void;
-
 	/**
 	 * Set the TTL for the cache for the current request.
 	 *
@@ -29,6 +25,14 @@ interface Provider {
 	 * @return void
 	 */
 	public function ttl( int $seconds ): void;
+
+	/**
+	 * Set the default TTL for the cache for all REST API requests.
+	 *
+	 * @param int $seconds TTL in seconds.
+	 * @return void
+	 */
+	public function ttl_rest_api( int $seconds ): void;
 
 	/**
 	 * Disable the page cache for the current request.
@@ -43,6 +47,13 @@ interface Provider {
 	 * @return void
 	 */
 	public function disable_cache_for_user(): void;
+
+	/**
+	 * Enable the page cache for the user for this and all subsequent requests.
+	 *
+	 * @return void
+	 */
+	public function enable_cache_for_user(): void;
 
 	/**
 	 * Register a cache group.
@@ -135,6 +146,8 @@ interface Provider {
 
 	/**
 	 * Flush the entire page cache.
+	 *
+	 * **WARNING:** This will purge the entire page cache. Use with caution.
 	 */
 	public function flush(): void;
 }

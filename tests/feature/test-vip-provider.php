@@ -15,6 +15,8 @@ class Test_VIP_Provider extends Test_Case {
 		parent::setUp();
 
 		add_filter( 'wp_page_cache_control_provider', fn () => VIP_Provider::class );
+
+		$this->assertInstanceOf( VIP_Provider::class, wp_page_cache_control() );
 	}
 
 	protected function tearDown(): void {
@@ -46,11 +48,15 @@ class Test_VIP_Provider extends Test_Case {
 		Header::assertNoneSent();
 
 		$this->assertTrue( Vary_Cache::is_user_in_nocache() );
+
+		wp_page_cache_control()->enable_cache_for_user();
+
+		$this->assertFalse( Vary_Cache::is_user_in_nocache() );
 	}
 
 	public function test_register_groups() {
-		Vary_Cache::register_group( 'test-group' );
-		Vary_Cache::register_groups( [ 'test-group-1', 'test-group-2' ] );
+		wp_page_cache_control()->register_group( 'test-group' );
+		wp_page_cache_control()->register_groups( [ 'test-group-1', 'test-group-2' ] );
 
 		$this->assertEquals(
 			[ 'test-group', 'test-group-1', 'test-group-2' ],

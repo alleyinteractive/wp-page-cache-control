@@ -15,9 +15,13 @@ use Automattic\VIP\Cache\Vary_Cache;
  * @return class-string<\WP_Page_Cache_Control\Providers\Provider>
  */
 function detect_provider(): string {
+	// Use the test provider by default if we're in testing mode.
+	if ( defined( 'WP_TESTS_DOMAIN' ) ) {
+		return Providers\Testable_Provider::class;
+	}
+
 	if (
-		( defined( 'WPCOM_IS_VIP_ENV' ) && WPCOM_IS_VIP_ENV )
-		|| class_exists( \VIP_Request_Block::class )
+		( defined( 'WPCOM_IS_VIP_ENV' ) && WPCOM_IS_VIP_ENV ) || class_exists( \VIP_Request_Block::class )
 	) {
 		return Providers\VIP_Provider::class;
 	}

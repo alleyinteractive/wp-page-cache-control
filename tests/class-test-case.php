@@ -13,4 +13,12 @@ abstract class Test_Case extends TestkitTest_Case {
 
 		Header::fake();
 	}
+
+	protected function tearDown(): void {
+		parent::tearDown();
+
+		global $wp_page_cache_control_provider;
+
+		$wp_page_cache_control_provider = null;
+	}
 }
