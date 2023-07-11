@@ -207,4 +207,26 @@ class Header {
 
 		Assert::assertTrue( true, "Header $header was not sent with value $value" );
 	}
+
+	/**
+	 * Assert that any header was sent.
+	 */
+	public static function assertAnySent(): void {
+		if ( ! class_exists( Assert::class ) ) {
+			return;
+		}
+
+		Assert::assertNotEmpty( static::$record, 'No headers were sent' );
+	}
+
+	/**
+	 * Assert that no headers were sent.
+	 */
+	public static function assertNoneSent(): void {
+		if ( ! class_exists( Assert::class ) ) {
+			return;
+		}
+
+		Assert::assertEmpty( static::$record, 'Headers were sent' );
+	}
 }

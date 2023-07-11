@@ -15,20 +15,12 @@ use WP_Term;
  */
 interface Provider {
 	/**
-	 * Set the default TTL for the cache for all requests.
-	 *
-	 * @param int $seconds TTL in seconds.
-	 * @return void
-	 */
-	public function default_ttl( int $seconds ): void;
-
-	/**
 	 * Set the default TTL for the cache for all REST API requests.
 	 *
 	 * @param int $seconds TTL in seconds.
 	 * @return void
 	 */
-	public function default_ttl_rest_api( int $seconds ): void;
+	public function ttl_rest_api( int $seconds ): void;
 
 	/**
 	 * Set the TTL for the cache for the current request.
@@ -101,48 +93,48 @@ interface Provider {
 	 */
 	public function is_user_in_group_segment( string $group, string $segment ): bool;
 
-	// /**
-	//  * Block a user by IP address.
-	//  *
-	//  * @param array<int, string>|string $ip The IP address(es) to block.
-	//  * @return void
-	//  */
-	// public function block_ip( array|string $ip ): void;
+	/**
+	 * Block a user by IP address.
+	 *
+	 * @param array<int, string>|string $ip The IP address(es) to block.
+	 * @return void
+	 */
+	public function block_ip( array|string $ip ): void;
 
-	// /**
-	//  * Block a user by user agent.
-	//  *
-	//  * @param array<int, string>|string $user_agent The user agent(s) to block.
-	//  * @return void
-	//  */
-	// public function block_user_agent( array|string $user_agent ): void;
+	/**
+	 * Block a user by user agent.
+	 *
+	 * @param array<int, string>|string $user_agent The user agent(s) to block.
+	 * @return void
+	 */
+	public function block_user_agent( array|string $user_agent ): void;
 
-	// /**
-	//  * Purge a specific URL from the cache.
-	//  *
-	//  * @param string $url The URL to purge.
-	//  * @return void
-	//  */
-	// public function purge( string $url ): void;
+	/**
+	 * Purge a specific URL from the cache.
+	 *
+	 * @param string $url The URL to purge.
+	 * @return void
+	 */
+	public function purge( string $url ): void;
 
-	// /**
-	//  * Purge a specific post from the cache.
-	//  *
-	//  * @param WP_Post|int $post The post to purge.
-	//  * @return void
-	//  */
-	// public function purge_post( WP_Post|int $post ): void;
+	/**
+	 * Purge a specific post from the cache.
+	 *
+	 * @param WP_Post|int $post The post to purge.
+	 * @return void
+	 */
+	public function purge_post( WP_Post|int $post ): void;
 
-	// /**
-	//  * Purge a specific term from the cache.
-	//  *
-	//  * @param WP_Term|int $term The term to purge.
-	//  * @return void
-	//  */
-	// public function purge_term( WP_Term|int $term ): void;
+	/**
+	 * Purge a specific term from the cache.
+	 *
+	 * @param WP_Term|int $term The term to purge.
+	 * @return void
+	 */
+	public function purge_term( WP_Term|int $term ): void;
 
-	// /**
-	//  * Flush the entire page cache.
-	//  */
-	// public function flush(): void;
+	/**
+	 * Flush the entire page cache.
+	 */
+	public function flush(): void;
 }

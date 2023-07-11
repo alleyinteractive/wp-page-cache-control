@@ -7,14 +7,38 @@
 
 namespace Alley\WP\WP_Page_Cache_Control\Providers;
 
+use Alley\WP\WP_Page_Cache_Control\Header;
 use Automattic\VIP\Cache\Vary_Cache;
 use InvalidArgumentException;
-use Alley\WP\WP_Page_Cache_Control\Header;
+use VIP_Request_Block;
+use WP_Post;
+use WP_Term;
+use WPCOM_VIP_Cache_Manager;
 
 /**
  * WordPress VIP Cache Provider
  */
-class VIP_Provider extends Provider {
+class VIP_Provider implements Provider {
+	/**
+	 * Constructor.
+	 */
+	public function __construct() {
+		// Ensure Vary_Cache is loaded.
+		if ( ! class_exists( Vary_Cache::class ) && file_exists( WPMU_PLUGIN_DIR . '/cache/class-vary-cache.php' ) ) {
+			require_once WPMU_PLUGIN_DIR . '/cache/class-vary-cache.php';
+		}
+	}
+
+	/**
+	 * Set the default TTL for the cache for all REST API requests.
+	 *
+	 * @param int $seconds TTL in seconds.
+	 * @return void
+	 */
+	public function ttl_rest_api( int $seconds ): void {
+		Header::rest_max_age( $seconds );
+	}
+
 	/**
 	 * Set the TTL for the cache for the current request.
 	 *
@@ -69,7 +93,7 @@ class VIP_Provider extends Provider {
 	 * @return array<int, string> The registered groups.
 	 */
 	public function groups(): array {
-		return Vary_Cache::get_groups();
+		return array_keys( Vary_Cache::get_groups() );
 	}
 
 	/**
@@ -118,42 +142,70 @@ class VIP_Provider extends Provider {
 	 * @param array<int, string>|string $ip The IP address(es) to block.
 	 * @return void
 	 */
-	// public function block_ip( array|string $ip ): void;
+	public function block_ip( array|string $ip ): void {
+		if ( is_array( $ip ) ) {
+			foreach ( $ip as $single_ip ) {
+				static::block_ip( $single_ip );
+			}
 
-	// /**
-	//  * Block a user by user agent.
-	//  *
-	//  * @param array<int, string>|string $user_agent The user agent(s) to block.
-	//  * @return void
-	//  */
-	// public function block_user_agent( array|string $user_agent ): void;
+			return;
+		}
 
-	// /**
-	//  * Purge a specific URL from the cache.
-	//  *
-	//  * @param string $url The URL to purge.
-	//  * @return void
-	//  */
-	// public function purge( string $url ): void;
+		VIP_Request_Block::ip( $ip );
+	}
 
-	// /**
-	//  * Purge a specific post from the cache.
-	//  *
-	//  * @param WP_Post|int $post The post to purge.
-	//  * @return void
-	//  */
-	// public function purge_post( WP_Post|int $post ): void;
+	/**
+	 * Block a user by user agent.
+	 *
+	 * @param array<int, string>|string $user_agent The user agent(s) to block.
+	 * @return void
+	 */
+	public function block_user_agent( array|string $user_agent ): void {
+		if ( is_array( $user_agent ) ) {
+			foreach ( $user_agent as $single_user_agent ) {
+				static::block_user_agent( $single_user_agent );
+			}
 
-	// /**
-	//  * Purge a specific term from the cache.
-	//  *
-	//  * @param WP_Term|int $term The term to purge.
-	//  * @return void
-	//  */
-	// public function purge_term( WP_Term|int $term ): void;
+			return;
+		}
 
-	// /**
-	//  * Flush the entire page cache.
-	//  */
-	// public function flush(): void;
+		VIP_Request_Block::ua( $user_agent );
+	}
+
+	/**
+	 * Purge a specific URL from the cache.
+	 *
+	 * @param string $url The URL to purge.
+	 * @return void
+	 */
+	public function purge( string $url ): void {
+		wpcom_vip_purge_edge_cache_for_url( $url );
+	}
+
+	/**
+	 * Purge a specific post from the cache.
+	 *
+	 * @param WP_Post|int $post The post to purge.
+	 * @return void
+	 */
+	public function purge_post( WP_Post|int $post ): void {
+		wpcom_vip_purge_edge_cache_for_post( $post );
+	}
+
+	/**
+	 * Purge a specific term from the cache.
+	 *
+	 * @param WP_Term|int $term The term to purge.
+	 * @return void
+	 */
+	public function purge_term( WP_Term|int $term ): void {
+		wpcom_vip_purge_edge_cache_for_term( $term );
+	}
+
+	/**
+	 * Flush the entire page cache for a site.
+	 */
+	public function flush(): void {
+		WPCOM_VIP_Cache_Manager::instance()->purge_site_cache();
+	}
 }
