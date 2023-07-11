@@ -41,11 +41,26 @@ class Pantheon_Provider implements Provider {
 	const COOKIE_SEGMENT_PREFIX = 'STYXKEY-';
 
 	/**
+	 * Determine if the user is not being cached (bypassing the page cache with
+	 * a cookie).
+	 *
+	 * @var bool
+	 */
+	protected bool $is_user_no_cache = false;
+
+	/**
 	 * Storage of cache groups.
 	 *
 	 * @var array<string, string>
 	 */
 	protected array $groups = [];
+
+	/**
+	 * Flag if we should update the group cookies.
+	 *
+	 * @var bool
+	 */
+	protected bool $should_update_group_cookies = false;
 
 	/**
 	 * Constructor.
@@ -170,6 +185,8 @@ class Pantheon_Provider implements Provider {
 			);
 		}
 
+		$this->should_update_group_cookies = true;
+
 		$this->groups[ $group ] = $segment;
 	}
 
@@ -281,6 +298,10 @@ class Pantheon_Provider implements Provider {
 	 * Read the cookies from the request and assign the user to groups.
 	 */
 	public function read_cookies() {
+		if ( $this->get_cookie( static::COOKIE_NO_CACHE ) ) {
+			$this->is_user_no_cache = true;
+		}
+
 		if ( empty( $_COOKIE ) ) {
 			return;
 		}
@@ -302,9 +323,32 @@ class Pantheon_Provider implements Provider {
 	}
 
 	/**
+	 * Send the cookies for the groups and segments.
+	 *
+	 * @return void
+	 */
+	public function set_group_cookies(): void {
+		if ( ! $this->should_update_group_cookies ) {
+			return;
+		}
+
+		collect( $this->groups )
+			->map_with_keys(
+				fn ( string $segment, string $group ) => [
+					self::COOKIE_SEGMENT_PREFIX . $group => $segment,
+				]
+			)
+			->sort_keys()
+			->each(
+				fn ( string $value, string $name ) => $this->set_cookie( $name, $value ),
+			);
+	}
+
+	/**
 	 * Send the headers and cookies.
 	 */
 	public function send_headers() {
-
+		$this->set_group_cookies();
+		$this->send_cookies();
 	}
 }

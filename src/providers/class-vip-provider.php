@@ -230,4 +230,11 @@ class VIP_Provider implements Provider {
 	public function flush(): void {
 		WPCOM_VIP_Cache_Manager::instance()->purge_site_cache();
 	}
+
+	/**
+	 * Send all headers and cookies for a provider on-demand.
+	 */
+	public function send_headers() {
+		Vary_Cache::send_headers();
+	}
 }

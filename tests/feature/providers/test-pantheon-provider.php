@@ -3,10 +3,7 @@ namespace Alley\WP\WP_Page_Cache_Control\Tests\Feature\Providers;
 
 use Alley\WP\WP_Page_Cache_Control\Header;
 use Alley\WP\WP_Page_Cache_Control\Providers\Pantheon_Provider;
-use Alley\WP\WP_Page_Cache_Control\Providers\VIP_Provider;
 use Alley\WP\WP_Page_Cache_Control\Tests\Test_Case;
-use Automattic\VIP\Cache\Vary_Cache;
-use WPCOM_VIP_Cache_Manager;
 
 /**
  * Pantheon Advanced Page Cache Provider
@@ -19,15 +16,6 @@ class Test_Pantheon_Provider extends Test_Case {
 
 		$this->assertInstanceOf( Pantheon_Provider::class, wp_page_cache_control() );
 	}
-
-	// protected function tearDown(): void {
-	// 	parent::tearDown();
-
-	// 	Vary_Cache::unload();
-
-	// 	// phpcs:ignore WordPressVIPMinimum.Variables.RestrictedVariables.cache_constraints___SERVER__HTTP_USER_AGENT__
-	// 	unset( $_SERVER['HTTP_TRUE_CLIENT_IP'], $_SERVER['HTTP_X_FORWARDED_FOR'], $_SERVER['HTTP_USER_AGENT'] );
-	// }
 
 	public function test_ttl() {
 		wp_page_cache_control()->ttl( 1800 );
@@ -45,12 +33,14 @@ class Test_Pantheon_Provider extends Test_Case {
 
 	public function test_disable_cache_for_user() {
 		wp_page_cache_control()->disable_cache_for_user();
+		wp_page_cache_control()->send_headers();
 
 		Header::assertNoneSent();
 
 		$this->assertNotEmpty( $_COOKIE[ Pantheon_Provider::COOKIE_NO_CACHE ] ?? null );
 
 		wp_page_cache_control()->enable_cache_for_user();
+		wp_page_cache_control()->send_headers();
 
 		$this->assertEmpty( $_COOKIE[ Pantheon_Provider::COOKIE_NO_CACHE ] ?? null );
 	}
@@ -89,8 +79,6 @@ class Test_Pantheon_Provider extends Test_Case {
 		$this->assertTrue( wp_page_cache_control()->is_user_in_group( 'test-group' ) );
 		$this->assertTrue( wp_page_cache_control()->is_user_in_group_segment( 'test-group', 'segment' ) );
 		$this->assertFalse( wp_page_cache_control()->is_user_in_group_segment( 'test-group', 'other-segment' ) );
-
-		// Test setting cookie from value.
 	}
 
 	/**
@@ -163,6 +151,74 @@ class Test_Pantheon_Provider extends Test_Case {
 				],
 			],
 		];
+	}
+
+	/**
+	 * @dataProvider dataprovider_set_cookies_from_groups
+	 */
+	public function test_set_cookies_from_groups( array $group_segments, array $cookies ) {
+		$plugin = wp_page_cache_control();
+
+		if ( ! ( $plugin instanceof Pantheon_Provider ) ) {
+			return;
+		}
+
+		foreach ( $group_segments as $group => $segment ) {
+			$plugin->register_group( $group );
+			$plugin->set_group_for_user( $group, $segment );
+		}
+
+		$plugin->set_group_cookies();
+
+		$this->assertEquals( $cookies, $plugin->get_cookie_queue() );
+	}
+
+	public static function dataprovider_set_cookies_from_groups() {
+		return [
+			'no groups' => [
+				// Group -> segment pairs.
+				[],
+				// Expected cookies.
+				[],
+			],
+			'one group' => [
+				[
+					'example' => 'segment',
+				],
+				[
+					Pantheon_Provider::COOKIE_SEGMENT_PREFIX . 'example' => 'segment',
+				],
+			],
+			// The groups should be sorted alphabetically.
+			'multiple groups' => [
+				[
+					'other'   => 'other-segment',
+					'example' => 'segment',
+				],
+				[
+					Pantheon_Provider::COOKIE_SEGMENT_PREFIX . 'example' => 'segment',
+					Pantheon_Provider::COOKIE_SEGMENT_PREFIX . 'other'   => 'other-segment',
+				],
+			],
+		];
+	}
+
+	public function test_dont_set_cookies_if_unchanged() {
+		$plugin = wp_page_cache_control();
+
+		if ( ! ( $plugin instanceof Pantheon_Provider ) ) {
+			return;
+		}
+
+		$plugin->register_group( 'example' );
+
+		$this
+			->with_cookie( Pantheon_Provider::COOKIE_SEGMENT_PREFIX . 'example', 'segment' )
+			->get( '/' );
+
+		$plugin->set_group_cookies();
+
+		$this->assertEmpty( $plugin->get_cookie_queue() );
 	}
 
 	// public function test_purge() {

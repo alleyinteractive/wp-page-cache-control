@@ -157,4 +157,9 @@ interface Provider {
 	 * **WARNING:** This will purge the entire page cache. Use with caution.
 	 */
 	public function flush(): void;
+
+	/**
+	 * Send all headers and cookies for a provider on-demand.
+	 */
+	public function send_headers();
 }
