@@ -26,6 +26,11 @@ appropriate provider class. It can also be controlled by the
 `wp_page_cache_control_provider` hook which should return a provider class
 string.
 
+The main goal of the plugin is to solve common page cache control needs across
+multiple hosting providers. It is not meant to be a complete solution for all
+page cache control needs. If you have a need that is not met by the plugin,
+please open an issue or pull request.
+
 ## Usage
 
 The plugin supports back-end page cache control including TTL, bypassing the
@@ -48,6 +53,10 @@ wp_page_cache_control()->ttl( 3600 );
 wp_page_cache_control()->disable_cache();
 ```
 ### Disabling the Page Cache for the Current User
+
+Disabling the page cache for the current user will cause the user to bypass the
+page cache for the current and subsequent requests. This is useful for testing
+or for logged-in users.
 
 ```php
 wp_page_cache_control()->disable_cache_for_user();
