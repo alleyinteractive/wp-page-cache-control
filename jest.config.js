@@ -15,5 +15,5 @@ module.exports = {
   modulePathIgnorePatterns: [
     '.buddy-tests',
   ],
-  testEnvironment: 'node',
+  testEnvironment: 'jsdom',
 };

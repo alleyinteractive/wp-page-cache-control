@@ -9,10 +9,11 @@
 
 namespace Alley\WP\WP_Page_Cache_Control;
 
+use Mantle\Support\Str;
+
 // Register and enqueue assets.
 add_action( 'wp_enqueue_scripts', __NAMESPACE__ . '\action_wp_enqueue_scripts' );
-add_action( 'admin_enqueue_scripts', __NAMESPACE__ . '\action_admin_enqueue_scripts' );
-add_action( 'enqueue_block_editor_assets', __NAMESPACE__ . '\action_enqueue_block_editor_assets' );
+add_action( 'wp_head', __NAMESPACE__ . '\action_wp_head' );
 
 /**
  * A callback for the wp_enqueue_scripts hook.
@@ -32,62 +33,55 @@ function action_wp_enqueue_scripts(): void {
 	|
 	*/
 
-	// wp_enqueue_script(
-	// 	'wp-page-cache-control-example-entry',
-	// 	get_entry_asset_url( 'example-entry' ),
-	// 	get_asset_dependency_array( 'example-entry' ),
-	// 	get_asset_version( 'example-entry' ),
-	// 	true
-	// );
-	// wp_set_script_translations( 'wp-page-cache-control-example-entry', 'wp-page-cache-control' );
+	wp_enqueue_script(
+		'wp-page-cache-control',
+		get_entry_asset_url( 'global' ),
+		get_asset_dependency_array( 'global' ),
+		get_asset_version( 'global' ),
+		false,
+	);
+
+	wp_localize_script(
+		'wp-page-cache-control',
+		'wpPageCacheControlSettings',
+		[
+			'provider' => Str::studly( Str::after_last( wp_page_cache_control()::class, '\\' ) ),
+		],
+	);
 }
 
 /**
- * A callback for the admin_enqueue_scripts hook.
+ * Preload the script as early as possible.
  */
-function action_admin_enqueue_scripts(): void {
-	/*
-	|--------------------------------------------------------------------------
-	| Enqueue admin assets using the asset/entry helper functions.
-	|--------------------------------------------------------------------------
-	|
-	| This function is called by the admin_enqueue_scripts hook. Use it to enqueue
-	| assets that are loaded only in the WordPress admin.
-	|
-	*/
+function action_wp_head(): void {
+	/**
+	 * Allow the script to be short-circuited.
+	 *
+	 * @param bool $preload_script Whether to preload the script. Default true.
+	 */
+	if ( ! apply_filters( 'wp_page_cache_control_preload_script', true ) ) {
+		return;
+	}
 
-	// wp_enqueue_script(
-	// 	'wp-page-cache-control-admin-handle',
-	// 	get_entry_asset_url( 'admin-handle' ),
-	// 	get_asset_dependency_array( 'admin-handle' ),
-	// 	get_asset_version( 'admin-handle' ),
-	// 	true
-	// );
-	// wp_set_script_translations( 'wp-page-cache-control-admin-handle', 'wp-page-cache-control' );
-}
+	global $wp_scripts;
 
-/**
- * A callback for the enqueue_block_editor_assets hook.
- */
-function action_enqueue_block_editor_assets(): void {
-	/*
-	|--------------------------------------------------------------------------
-	| Enqueue block editor assets using the asset/entry helper functions.
-	|--------------------------------------------------------------------------
-	|
-	| This function is called by the enqueue_block_editor_assets hook. Use it to
-	| enqueue assets that are loaded in the block editor.
-	|
-	*/
+	// Bail if the script isn't enqueued.
+	if ( ! wp_script_is( 'wp-page-cache-control', 'enqueued' ) ) {
+		return;
+	}
 
-	// wp_enqueue_script(
-	// 	'wp-page-cache-control-slotfills',
-	// 	get_entry_asset_url( 'slotfills' ),
-	// 	get_asset_dependency_array( 'slotfills' ),
-	// 	get_asset_version( 'slotfills' ),
-	// 	true
-	// );
-	// wp_set_script_translations( 'wp-page-cache-control-slotfills', 'wp-page-cache-control' );
+	// Get the script object.
+	$script = $wp_scripts->registered['wp-page-cache-control'] ?? null;
+
+	// Bail if the script object doesn't exist.
+	if ( empty( $script ) || empty( $script->src ) ) {
+		return;
+	}
+
+	printf(
+		'<link rel="preload" href="%s" as="script" />',
+		esc_url( $script->src )
+	);
 }
 
 /**
