@@ -63,24 +63,14 @@ function action_wp_head(): void {
 		return;
 	}
 
-	global $wp_scripts;
-
 	// Bail if the script isn't enqueued.
 	if ( ! wp_script_is( 'wp-page-cache-control', 'enqueued' ) ) {
 		return;
 	}
 
-	// Get the script object.
-	$script = $wp_scripts->registered['wp-page-cache-control'] ?? null;
-
-	// Bail if the script object doesn't exist.
-	if ( empty( $script ) || empty( $script->src ) ) {
-		return;
-	}
-
 	printf(
 		'<link rel="preload" href="%s" as="script" />',
-		esc_url( $script->src )
+		esc_url( add_query_arg( 'ver', get_asset_version( 'global' ), get_entry_asset_url( 'global' ) ) ),
 	);
 }
 
