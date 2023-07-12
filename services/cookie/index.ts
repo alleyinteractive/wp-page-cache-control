@@ -19,6 +19,27 @@ export const readCookie = (name: string): string | null => {
 };
 
 /**
+ * Read all cookies with a prefix.
+ *
+ * @param {String} prefix Cookie prefix
+ * @returns {Record<string, string>} Cookies
+ */
+export const readCookiesWithPrefix = (prefix: string): Record<string, string> => {
+  const cookies = document.cookie.split(';').map((cookie) => cookie.trim());
+  const result: Record<string, string> = {};
+
+  for (let i = 0; i < cookies.length; i += 1) {
+    const [cookieName = '', cookieValue = ''] = cookies[i].split('=');
+
+    if (cookieName.startsWith(prefix)) {
+      result[cookieName] = cookieValue;
+    }
+  }
+
+  return result;
+};
+
+/**
  * Set a cookie.
  *
  * @param {String} name Cookie name

@@ -4,7 +4,10 @@
  * @todo Only load the current provider instead of all of them.
  */
 
-import { WordPressVipCacheProvider } from '@/services/providers';
+import {
+  PantheonCacheProvider,
+  WordPressVipCacheProvider,
+} from '@/services/providers';
 
 const {
   wpPageCacheControlSettings: {
@@ -14,7 +17,7 @@ const {
 
 const providers = {
   VIPProvider: WordPressVipCacheProvider,
-  // PantheonProvider: PantheonCacheProvider,
+  PantheonProvider: PantheonCacheProvider,
 };
 
 if (typeof providers[provider as keyof typeof providers] === 'undefined') {
@@ -30,4 +33,10 @@ if (typeof providers[provider as keyof typeof providers] === 'undefined') {
       provider: window.wpPageCacheControl,
     },
   }));
+
+  // Fire a custom event to let other scripts know that the provider should be
+  // updated from the cookies.
+  window.addEventListener('wp-page-cache-control:read', () => {
+    window.wpPageCacheControl.read();
+  });
 }

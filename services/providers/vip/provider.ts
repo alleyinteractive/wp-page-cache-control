@@ -5,10 +5,10 @@ import { parseSegmentGroups, saveSegmentCookie } from './helpers';
  * WordPress VIP Cache Segmentation Provider
  */
 class WordPressVipCacheProvider implements WPPageCacheControlProvider {
-  groups: Record<string, string>;
+  groups: Record<string, string> = {};
 
   constructor() {
-    this.groups = parseSegmentGroups();
+    this.read();
   }
 
   isUserInGroup(group: string) {
@@ -20,8 +20,26 @@ class WordPressVipCacheProvider implements WPPageCacheControlProvider {
   }
 
   setGroupForUser(group: string, segment: string) {
+    // Check if the group is registered.
+    const {
+      wpPageCacheControlSettings: { registeredGroups = [] },
+    } = window;
+
+    if (!registeredGroups.includes(group)) {
+      console.error(`WP Page Cache Control: The group "${group}" is not registered.`); // eslint-disable-line no-console
+
+      return false;
+    }
+
     this.groups[group] = segment;
+
     saveSegmentCookie(this.groups);
+
+    return true;
+  }
+
+  read() {
+    this.groups = parseSegmentGroups();
   }
 }
 

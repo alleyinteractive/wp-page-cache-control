@@ -19,20 +19,6 @@ add_action( 'wp_head', __NAMESPACE__ . '\action_wp_head' );
  * A callback for the wp_enqueue_scripts hook.
  */
 function action_wp_enqueue_scripts(): void {
-	/*
-	|--------------------------------------------------------------------------
-	| Enqueue site assets using the asset/entry helper functions.
-	|--------------------------------------------------------------------------
-	|
-	| This function is called by the enqueue_block_editor_assets hook. Use it to
-	| enqueue assets that are loaded across your site.
-	|
-	| For more advanced usage, check out the WordPress Asset Manager plugin by Alley.
-	|
-	|     https://github.com/alleyinteractive/wp-asset-manager
-	|
-	*/
-
 	wp_enqueue_script(
 		'wp-page-cache-control',
 		get_entry_asset_url( 'global' ),
@@ -45,7 +31,8 @@ function action_wp_enqueue_scripts(): void {
 		'wp-page-cache-control',
 		'wpPageCacheControlSettings',
 		[
-			'provider' => Str::studly( Str::after_last( wp_page_cache_control()::class, '\\' ) ),
+			'provider'         => Str::studly( Str::after_last( wp_page_cache_control()::class, '\\' ) ),
+			'registeredGroups' => wp_page_cache_control()->groups(),
 		],
 	);
 }

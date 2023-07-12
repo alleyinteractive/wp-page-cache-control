@@ -9,6 +9,7 @@ declare global {
   interface Window {
     wpPageCacheControlSettings: {
       provider: 'VIPProvider' | 'PantheonProvider' | 'TestableProvider';
+      registeredGroups: string[];
     };
     wpPageCacheControl: WPPageCacheControlProvider;
   }
