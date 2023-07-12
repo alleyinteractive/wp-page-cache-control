@@ -19,6 +19,15 @@ add_action( 'wp_head', __NAMESPACE__ . '\action_wp_head' );
  * A callback for the wp_enqueue_scripts hook.
  */
 function action_wp_enqueue_scripts(): void {
+	/**
+	 * Allow the front-end script to be short-circuited.
+	 *
+	 * @param bool $enqueue_script Whether to enqueue the script. Default true.
+	 */
+	if ( ! apply_filters( 'wp_page_cache_control_enqueue_script', true ) ) {
+		return;
+	}
+
 	wp_enqueue_script(
 		'wp-page-cache-control',
 		get_entry_asset_url( 'global' ),
@@ -124,8 +133,7 @@ function get_entry_asset_map( string $dir_entry_name ): array {
  * @return array<int, string> The asset's dependency array.
  */
 function get_asset_dependency_array( string $dir_entry_name ) : array {
-	$asset_arr = get_entry_asset_map( $dir_entry_name );
-	return $asset_arr['dependencies'] ?? [];
+	return get_entry_asset_map( $dir_entry_name )['dependencies'] ?? [];
 }
 
 /**
@@ -136,8 +144,7 @@ function get_asset_dependency_array( string $dir_entry_name ) : array {
  * @return string The asset's version hash.
  */
 function get_asset_version( string $dir_entry_name ) : string {
-	$asset_arr = get_entry_asset_map( $dir_entry_name );
-	return $asset_arr['version'] ?? '1.0';
+	return get_entry_asset_map( $dir_entry_name )['version'] ?? '1.0';
 }
 
 /**
@@ -162,20 +169,3 @@ function get_entry_asset_url( string $dir_entry_name, $filename = 'index.js' ) {
 
 	return '';
 }
-
-/**
- * Load the php index files from the build directory for blocks, slotfills, and any other scripts with an index.php file.
- */
-function load_scripts(): void {
-	$files = glob( WP_PAGE_CACHE_CONTROL_DIR . '/build/**/index.php' );
-
-	if ( ! empty( $files ) ) {
-		foreach ( $files as $path ) {
-			if ( 0 === validate_file( $path ) && file_exists( $path ) ) {
-				require_once $path;  // phpcs:ignore WordPressVIPMinimum.Files.IncludingFile.IncludingFile, WordPressVIPMinimum.Files.IncludingFile.UsingVariable
-			}
-		}
-	}
-}
-
-load_scripts();
