@@ -75,9 +75,14 @@ function wp_page_cache_control(): Provider {
 	global $wp_page_cache_control_provider;
 
 	if ( ! isset( $wp_page_cache_control_provider ) ) {
+		/**
+		 * Filter the cache provider class.
+		 *
+		 * @param string $wp_page_cache_control_provider The cache provider class.
+		 */
 		$wp_page_cache_control_provider = apply_filters( 'wp_page_cache_control_provider', detect_provider() );
 
-		if ( ! class_exists( $wp_page_cache_control_provider ) ) {
+		if ( empty( $wp_page_cache_control_provider ) || ! class_exists( $wp_page_cache_control_provider ) ) {
 			throw new InvalidArgumentException(
 				"Invalid provider class provided. Expected class to exist: {$wp_page_cache_control_provider}",
 			);
