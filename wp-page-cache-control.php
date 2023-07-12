@@ -95,10 +95,9 @@ add_action( 'muplugins_loaded', __NAMESPACE__ . '\\wp_page_cache_control' ); // 
  * Also, setup the cache provider to fire their headers as well. Runs late to
  * catch any changes that may happen earlier in 'send_headers'.
  */
-function wp_page_cache_control_send_headers() {
+function wp_page_cache_control_send_headers(): void {
 	wp_page_cache_control()->send_headers();
 
 	Header::send_headers();
-	dd('SEND HEADERS');
 }
 add_action( 'send_headers', __NAMESPACE__ . '\\wp_page_cache_control_send_headers', PHP_INT_MAX );
