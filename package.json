@@ -1,6 +1,6 @@
 {
   "name": "@alleyinteractive/wp-page-cache-control",
-  "version": "1.0.0-alpha.5",
+  "version": "1.0.0-alpha.6",
   "license": "GPL-2.0-or-later",
   "main": "./types/index.d.ts",
   "types": "./types/index.d.ts",
@@ -19,10 +19,8 @@
     "check-types": "tsc",
     "lint:fix": "eslint --ext .jsx --ext .js --ext .ts --ext .tsx . --fix",
     "lint": "npm run check-types && eslint --ext .jsx --ext .js --ext .ts --ext .tsx .",
-    "postinstall": "rm -rf node_modules/.cache/babel-loader && rm -rf node_modules/.cache/webpack",
     "prebuild": "check-node-version --package",
     "predev": "check-node-version --package",
-    "preinstall": "check-node-version --package",
     "prelint:fix": "check-node-version --package",
     "prelint": "check-node-version --package",
     "prestylelint:fix": "check-node-version --package",
