@@ -53,7 +53,6 @@ class VIP_Provider implements Provider {
 
 	/**
 	 * Disable the page cache for the current request.
-	 *
 	 */
 	public function disable_cache(): void {
 		Header::no_cache();
@@ -61,7 +60,6 @@ class VIP_Provider implements Provider {
 
 	/**
 	 * Disable the page cache for the user for this and all subsequent requests.
-	 *
 	 */
 	public function disable_cache_for_user(): void {
 		Vary_Cache::set_nocache_for_user();
@@ -69,7 +67,6 @@ class VIP_Provider implements Provider {
 
 	/**
 	 * Enable the page cache for the user for this and all subsequent requests.
-	 *
 	 */
 	public function enable_cache_for_user(): void {
 		Vary_Cache::remove_nocache_for_user();

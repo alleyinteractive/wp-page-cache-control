@@ -33,19 +33,16 @@ interface Provider {
 
 	/**
 	 * Disable the page cache for the current request.
-	 *
 	 */
 	public function disable_cache(): void;
 
 	/**
 	 * Disable the page cache for the user for this and all subsequent requests.
-	 *
 	 */
 	public function disable_cache_for_user(): void;
 
 	/**
 	 * Enable the page cache for the user for this and all subsequent requests.
-	 *
 	 */
 	public function enable_cache_for_user(): void;
 

@@ -169,7 +169,6 @@ class Header {
 
 	/**
 	 * Send no-cache headers.
-	 *
 	 */
 	public static function no_cache(): void {
 		$headers = wp_get_nocache_headers();

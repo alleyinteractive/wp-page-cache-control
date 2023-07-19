@@ -67,7 +67,6 @@ trait Manages_Cookies {
 
 	/**
 	 * Send the cookies from the queue.
-	 *
 	 */
 	protected function send_cookies(): void {
 		foreach ( $this->cookie_queue as $name => $cookie ) {
