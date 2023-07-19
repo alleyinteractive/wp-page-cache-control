@@ -37,7 +37,6 @@ class VIP_Provider implements Provider {
 	 * Set the TTL for the cache for the current request.
 	 *
 	 * @param int $seconds TTL in seconds.
-	 * @return void
 	 */
 	public function ttl( int $seconds ): void {
 		Header::max_age( $seconds );
@@ -47,7 +46,6 @@ class VIP_Provider implements Provider {
 	 * Set the default TTL for the cache for all REST API requests.
 	 *
 	 * @param int $seconds TTL in seconds.
-	 * @return void
 	 */
 	public function ttl_rest_api( int $seconds ): void {
 		Header::rest_max_age( $seconds );
@@ -55,8 +53,6 @@ class VIP_Provider implements Provider {
 
 	/**
 	 * Disable the page cache for the current request.
-	 *
-	 * @return void
 	 */
 	public function disable_cache(): void {
 		Header::no_cache();
@@ -64,8 +60,6 @@ class VIP_Provider implements Provider {
 
 	/**
 	 * Disable the page cache for the user for this and all subsequent requests.
-	 *
-	 * @return void
 	 */
 	public function disable_cache_for_user(): void {
 		Vary_Cache::set_nocache_for_user();
@@ -73,8 +67,6 @@ class VIP_Provider implements Provider {
 
 	/**
 	 * Enable the page cache for the user for this and all subsequent requests.
-	 *
-	 * @return void
 	 */
 	public function enable_cache_for_user(): void {
 		Vary_Cache::remove_nocache_for_user();
@@ -102,7 +94,6 @@ class VIP_Provider implements Provider {
 	 * Register a cache group.
 	 *
 	 * @param array<int, string> $groups The groups to register.
-	 * @return void
 	 */
 	public function register_groups( array $groups ): void {
 		Vary_Cache::register_groups( $groups );
@@ -112,7 +103,6 @@ class VIP_Provider implements Provider {
 	 * Register a cache group.
 	 *
 	 * @param string $group The group to register.
-	 * @return void
 	 */
 	public function register_group( string $group ): void {
 		Vary_Cache::register_group( $group );
@@ -123,7 +113,7 @@ class VIP_Provider implements Provider {
 	 *
 	 * @return array<int, string> The registered groups.
 	 */
-	public function groups(): array {
+	public function get_groups(): array {
 		return array_keys( Vary_Cache::get_groups() );
 	}
 
@@ -134,7 +124,6 @@ class VIP_Provider implements Provider {
 	 *
 	 * @param string $group The group to assign the user to.
 	 * @param string $segment The segment within the group to assign the user to.
-	 * @return void
 	 */
 	public function set_group_for_user( string $group, string $segment ): void {
 		$response = Vary_Cache::set_group_for_user( $group, $segment );
@@ -171,7 +160,6 @@ class VIP_Provider implements Provider {
 	 * Block a user by IP address.
 	 *
 	 * @param array<int, string>|string $ip The IP address(es) to block.
-	 * @return void
 	 */
 	public function block_ip( array|string $ip ): void {
 		if ( is_array( $ip ) ) {
@@ -189,7 +177,6 @@ class VIP_Provider implements Provider {
 	 * Block a user by user agent.
 	 *
 	 * @param array<int, string>|string $user_agent The user agent(s) to block.
-	 * @return void
 	 */
 	public function block_user_agent( array|string $user_agent ): void {
 		if ( is_array( $user_agent ) ) {
@@ -207,7 +194,6 @@ class VIP_Provider implements Provider {
 	 * Purge a specific URL from the cache.
 	 *
 	 * @param string $url The URL to purge.
-	 * @return void
 	 */
 	public function purge( string $url ): void {
 		wpcom_vip_purge_edge_cache_for_url( $url );
@@ -217,7 +203,6 @@ class VIP_Provider implements Provider {
 	 * Purge a specific post from the cache.
 	 *
 	 * @param WP_Post|int $post The post to purge.
-	 * @return void
 	 */
 	public function purge_post( WP_Post|int $post ): void {
 		wpcom_vip_purge_edge_cache_for_post( $post );
@@ -227,7 +212,6 @@ class VIP_Provider implements Provider {
 	 * Purge a specific term from the cache.
 	 *
 	 * @param WP_Term|int $term The term to purge.
-	 * @return void
 	 */
 	public function purge_term( WP_Term|int $term ): void {
 		wpcom_vip_purge_edge_cache_for_term( $term );

@@ -27,7 +27,6 @@ trait Manages_Cookies {
 	 *
 	 * @param string $name The name of the cookie.
 	 * @param string $value The value of the cookie.
-	 * @return void
 	 */
 	public function set_cookie( string $name, string $value ): void {
 		$this->cookie_queue[ $name ] = [
@@ -39,7 +38,6 @@ trait Manages_Cookies {
 	 * Remove a cookie.
 	 *
 	 * @param string $name The name of the cookie.
-	 * @return void
 	 */
 	public function remove_cookie( string $name ): void {
 		$this->cookie_queue[ $name ] = [
@@ -69,8 +67,6 @@ trait Manages_Cookies {
 
 	/**
 	 * Send the cookies from the queue.
-	 *
-	 * @return void
 	 */
 	protected function send_cookies(): void {
 		foreach ( $this->cookie_queue as $name => $cookie ) {

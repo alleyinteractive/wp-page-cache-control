@@ -9,7 +9,6 @@
 
 namespace Alley\WP\WP_Page_Cache_Control;
 
-use PHPUnit\Framework\Assert;
 use WP_REST_Request;
 use WP_REST_Response;
 use WPCOM_VIP_Cache_Manager;
@@ -43,7 +42,6 @@ class Header {
 	 * Flag to fake the headers being sent.
 	 *
 	 * @param bool $fake Whether to fake the headers being sent.
-	 * @return void
 	 */
 	public static function fake( bool $fake = true ): void {
 		static::$fake = $fake;
@@ -118,7 +116,6 @@ class Header {
 	 * Send a max-age header.
 	 *
 	 * @param int $seconds The number of seconds to set the max-age to.
-	 * @return void
 	 */
 	public static function max_age( int $seconds ): void {
 		static::send( 'Cache-Control', 'max-age=' . $seconds );
@@ -172,8 +169,6 @@ class Header {
 
 	/**
 	 * Send no-cache headers.
-	 *
-	 * @return void
 	 */
 	public static function no_cache(): void {
 		$headers = wp_get_nocache_headers();
@@ -183,89 +178,5 @@ class Header {
 		foreach ( $headers as $name => $field_value ) {
 			static::send( $name, $field_value );
 		}
-	}
-
-	/**
-	 * Assert if a header was sent.
-	 *
-	 * @param string $header The header to check.
-	 * @param string $value The value of the header to check, optional.
-	 */
-	public static function assertSent( string $header, ?string $value = null ): void {
-		if ( ! class_exists( Assert::class ) ) {
-			return;
-		}
-
-		$header = strtolower( $header );
-
-		if ( empty( static::$record[ $header ] ) ) {
-			Assert::fail( 'Header ' . $header . ' was not sent' );
-		}
-
-		if ( is_null( $value ) ) {
-			return;
-		}
-
-		foreach ( static::$record[ $header ] as $sent_value ) {
-			if ( $value === $sent_value ) {
-				Assert::assertTrue( true, "Header $header was sent with value $value" );
-				return;
-			}
-		}
-
-		Assert::fail( "Header $header was not sent with value $value" );
-	}
-
-	/**
-	 * Assert if a header was not sent.
-	 *
-	 * @param string $header The header to check.
-	 * @param string $value The value of the header to check, optional.
-	 */
-	public static function assertNotSent( string $header, ?string $value = null ): void {
-		if ( ! class_exists( Assert::class ) ) {
-			return;
-		}
-
-		$header = strtolower( $header );
-
-		if ( empty( static::$record[ $header ] ) ) {
-			Assert::assertTrue( true, 'Header ' . $header . ' was not sent' );
-			return;
-		}
-
-		if ( is_null( $value ) ) {
-			return;
-		}
-
-		foreach ( static::$record[ $header ] as $sent_value ) {
-			if ( $value === $sent_value ) {
-				Assert::fail( "Header $header was sent with value $value" );
-			}
-		}
-
-		Assert::assertTrue( true, "Header $header was not sent with value $value" );
-	}
-
-	/**
-	 * Assert that any header was sent.
-	 */
-	public static function assertAnySent(): void {
-		if ( ! class_exists( Assert::class ) ) {
-			return;
-		}
-
-		Assert::assertNotEmpty( static::$record, 'No headers were sent' );
-	}
-
-	/**
-	 * Assert that no headers were sent.
-	 */
-	public static function assertNoneSent(): void {
-		if ( ! class_exists( Assert::class ) ) {
-			return;
-		}
-
-		Assert::assertEmpty( static::$record, 'Headers were sent' );
 	}
 }

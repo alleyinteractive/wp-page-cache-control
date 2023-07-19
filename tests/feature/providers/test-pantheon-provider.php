@@ -9,6 +9,8 @@ use Alley\WP\WP_Page_Cache_Control\Tests\Test_Case;
  * Pantheon Advanced Page Cache Provider
  */
 class Test_Pantheon_Provider extends Test_Case {
+	protected Pantheon_Provider $provider;
+
 	protected function setUp(): void {
 		parent::setUp();
 
@@ -20,43 +22,45 @@ class Test_Pantheon_Provider extends Test_Case {
 		add_filter( 'wp_page_cache_control_provider', fn () => Pantheon_Provider::class );
 
 		$this->assertInstanceOf( Pantheon_Provider::class, wp_page_cache_control() );
+
+		$this->provider = wp_page_cache_control();
 	}
 
 	public function test_ttl() {
-		wp_page_cache_control()->ttl( 1800 );
+		$this->provider->ttl( 1800 );
 
-		Header::assertSent( 'Cache-Control', 'max-age=1800' );
+		static::assertHeaderSent( 'Cache-Control', 'max-age=1800' );
 	}
 
 	public function test_disable_cache() {
-		wp_page_cache_control()->disable_cache();
+		$this->provider->disable_cache();
 
-		Header::assertSent( 'Cache-Control', 'no-cache, must-revalidate, max-age=0' );
+		static::assertHeaderSent( 'Cache-Control', 'no-cache, must-revalidate, max-age=0' );
 
 		$this->assertEmpty( $_COOKIE[ Pantheon_Provider::COOKIE_NO_CACHE ] ?? null );
 	}
 
 	public function test_disable_cache_for_user() {
-		wp_page_cache_control()->disable_cache_for_user();
-		wp_page_cache_control()->send_headers();
+		$this->provider->disable_cache_for_user();
+		$this->provider->send_headers();
 
-		Header::assertNoneSent();
+		static::assertNoHeadersSent();
 
 		$this->assertNotEmpty( $_COOKIE[ Pantheon_Provider::COOKIE_NO_CACHE ] ?? null );
 
-		wp_page_cache_control()->enable_cache_for_user();
-		wp_page_cache_control()->send_headers();
+		$this->provider->enable_cache_for_user();
+		$this->provider->send_headers();
 
 		$this->assertEmpty( $_COOKIE[ Pantheon_Provider::COOKIE_NO_CACHE ] ?? null );
 	}
 
 	public function test_register_groups() {
-		wp_page_cache_control()->register_group( 'test-group' );
-		wp_page_cache_control()->register_groups( [ 'test-group-1', 'test-group-2' ] );
+		$this->provider->register_group( 'test-group' );
+		$this->provider->register_groups( [ 'test-group-1', 'test-group-2' ] );
 
 		$this->assertEquals(
 			[ 'test-group', 'test-group-1', 'test-group-2' ],
-			wp_page_cache_control()->groups(),
+			$this->provider->get_groups(),
 		);
 	}
 
@@ -66,7 +70,7 @@ class Test_Pantheon_Provider extends Test_Case {
 	public function test_register_invalid_group( $group ) {
 		$this->expectException( \InvalidArgumentException::class );
 
-		wp_page_cache_control()->register_group( $group );
+		$this->provider->register_group( $group );
 	}
 
 	public static function invalid_groups() {
@@ -78,12 +82,12 @@ class Test_Pantheon_Provider extends Test_Case {
 	}
 
 	public function test_user_groups_and_segments() {
-		wp_page_cache_control()->register_group( 'test-group' );
-		wp_page_cache_control()->set_group_for_user( 'test-group', 'segment' );
+		$this->provider->register_group( 'test-group' );
+		$this->provider->set_group_for_user( 'test-group', 'segment' );
 
-		$this->assertTrue( wp_page_cache_control()->is_user_in_group( 'test-group' ) );
-		$this->assertTrue( wp_page_cache_control()->is_user_in_group_segment( 'test-group', 'segment' ) );
-		$this->assertFalse( wp_page_cache_control()->is_user_in_group_segment( 'test-group', 'other-segment' ) );
+		$this->assertTrue( $this->provider->is_user_in_group( 'test-group' ) );
+		$this->assertTrue( $this->provider->is_user_in_group_segment( 'test-group', 'segment' ) );
+		$this->assertFalse( $this->provider->is_user_in_group_segment( 'test-group', 'other-segment' ) );
 	}
 
 	/**
@@ -229,24 +233,24 @@ class Test_Pantheon_Provider extends Test_Case {
 	public function test_purge() {
 		$this->expectApplied( 'pantheon_wp_clear_edge_paths' )->with( [ home_url( '/example/' ) ] )->once();
 
-		wp_page_cache_control()->purge( home_url( '/example/' ) );
+		$this->provider->purge( home_url( '/example/' ) );
 	}
 
 	public function test_purge_post() {
 		$this->expectApplied( 'pantheon_purge_post_with_related' );
 
-		wp_page_cache_control()->purge_post( static::factory()->post->create() );
+		$this->provider->purge_post( static::factory()->post->create() );
 	}
 
 	public function test_purge_term() {
 		$this->expectApplied( 'pantheon_purge_term' );
 
-		wp_page_cache_control()->purge_term( static::factory()->term->create() );
+		$this->provider->purge_term( static::factory()->term->create() );
 	}
 
 	public function test_purge_site_cache() {
 		$this->expectApplied( 'pantheon_wp_clear_edge_all' )->once();
 
-		wp_page_cache_control()->flush();
+		$this->provider->flush();
 	}
 }

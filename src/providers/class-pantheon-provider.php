@@ -63,9 +63,15 @@ class Pantheon_Provider implements Provider {
 	/**
 	 * Constructor.
 	 *
-	 * @throws InvalidArgumentException If the Vary_Cache class does not exist.
+	 * @throws InvalidArgumentException If the Pantheon Advanced Page Cache plugin is not loaded.
 	 */
 	public function __construct() {
+		if ( ! function_exists( 'pantheon_wp_clear_edge_keys' ) ) {
+			throw new InvalidArgumentException(
+				'Pantheon Advanced Page Cache is not installed <https://github.com/pantheon-systems/pantheon-advanced-page-cache>'
+			);
+		}
+
 		add_action( 'init', [ $this, 'read_cookies' ] );
 		add_action( 'send_headers', [ $this, 'send_headers' ] );
 	}
@@ -74,7 +80,6 @@ class Pantheon_Provider implements Provider {
 	 * Set the TTL for the cache for the current request.
 	 *
 	 * @param int $seconds TTL in seconds.
-	 * @return void
 	 */
 	public function ttl( int $seconds ): void {
 		Header::max_age( $seconds );
@@ -84,7 +89,6 @@ class Pantheon_Provider implements Provider {
 	 * Set the default TTL for the cache for all REST API requests.
 	 *
 	 * @param int $seconds TTL in seconds.
-	 * @return void
 	 */
 	public function ttl_rest_api( int $seconds ): void {
 		Header::rest_max_age( $seconds );
@@ -92,8 +96,6 @@ class Pantheon_Provider implements Provider {
 
 	/**
 	 * Disable the page cache for the current request.
-	 *
-	 * @return void
 	 */
 	public function disable_cache(): void {
 		Header::no_cache();
@@ -101,8 +103,6 @@ class Pantheon_Provider implements Provider {
 
 	/**
 	 * Disable the page cache for the user for this and all subsequent requests.
-	 *
-	 * @return void
 	 */
 	public function disable_cache_for_user(): void {
 		$this->set_cookie( self::COOKIE_NO_CACHE, '1' );
@@ -110,8 +110,6 @@ class Pantheon_Provider implements Provider {
 
 	/**
 	 * Enable the page cache for the user for this and all subsequent requests.
-	 *
-	 * @return void
 	 */
 	public function enable_cache_for_user(): void {
 		$this->remove_cookie( self::COOKIE_NO_CACHE );
@@ -130,7 +128,6 @@ class Pantheon_Provider implements Provider {
 	 * Register a cache group.
 	 *
 	 * @param array<int, string> $groups The groups to register.
-	 * @return void
 	 */
 	public function register_groups( array $groups ): void {
 		foreach ( $groups as $group ) {
@@ -144,7 +141,6 @@ class Pantheon_Provider implements Provider {
 	 * @throws InvalidArgumentException If the group name is invalid.
 	 *
 	 * @param string $group The group to register.
-	 * @return void
 	 */
 	public function register_group( string $group ): void {
 		if ( ! isset( $this->groups[ $group ] ) ) {
@@ -163,7 +159,7 @@ class Pantheon_Provider implements Provider {
 	 *
 	 * @return array<int, string> The registered groups.
 	 */
-	public function groups(): array {
+	public function get_groups(): array {
 		return array_keys( $this->groups );
 	}
 
@@ -174,7 +170,6 @@ class Pantheon_Provider implements Provider {
 	 *
 	 * @param string $group The group to assign the user to.
 	 * @param string $segment The segment within the group to assign the user to.
-	 * @return void
 	 */
 	public function set_group_for_user( string $group, string $segment ): void {
 		if ( ! isset( $this->groups[ $group ] ) ) {
@@ -213,7 +208,6 @@ class Pantheon_Provider implements Provider {
 	 * Block a user by IP address.
 	 *
 	 * @param array<int, string>|string $ip The IP address(es) to block.
-	 * @return void
 	 */
 	public function block_ip( array|string $ip ): void {
 		if ( is_array( $ip ) ) {
@@ -233,7 +227,6 @@ class Pantheon_Provider implements Provider {
 	 * Block a user by user agent.
 	 *
 	 * @param array<int, string>|string $user_agent The user agent(s) to block.
-	 * @return void
 	 */
 	public function block_user_agent( array|string $user_agent ): void {
 		if ( is_array( $user_agent ) ) {
@@ -253,7 +246,6 @@ class Pantheon_Provider implements Provider {
 	 * Purge a specific URL from the cache.
 	 *
 	 * @param string $url The URL to purge.
-	 * @return void
 	 */
 	public function purge( string $url ): void {
 		pantheon_wp_clear_edge_paths( [ $url ] );
@@ -265,7 +257,6 @@ class Pantheon_Provider implements Provider {
 	 * @todo Work with Pantheon to move this into the Pantheon Advanced Page Cache plugin.
 	 *
 	 * @param WP_Post|int $post The post to purge.
-	 * @return void
 	 */
 	public function purge_post( WP_Post|int $post ): void {
 		$post = get_post( $post );
@@ -335,7 +326,6 @@ class Pantheon_Provider implements Provider {
 	 * @todo Work with Pantheon to move this into the Pantheon Advanced Page Cache plugin.
 	 *
 	 * @param WP_Term|int $term The term to purge.
-	 * @return void
 	 */
 	public function purge_term( WP_Term|int $term ): void {
 		$term = get_term( $term );
@@ -414,8 +404,6 @@ class Pantheon_Provider implements Provider {
 
 	/**
 	 * Send the cookies for the groups and segments.
-	 *
-	 * @return void
 	 */
 	public function set_group_cookies(): void {
 		if ( ! $this->should_update_group_cookies ) {
@@ -449,7 +437,6 @@ class Pantheon_Provider implements Provider {
 	 *
 	 * @param string $value The value that triggered the block.
 	 * @param string $criteria The criteria that triggered the block.
-	 * @return void
 	 */
 	protected function block_and_log( string $value, string $criteria ): void {
 		if ( defined( 'WP_CLI' ) && constant( 'WP_CLI' ) ) {

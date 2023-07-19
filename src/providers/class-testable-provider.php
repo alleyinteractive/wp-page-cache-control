@@ -81,7 +81,6 @@ class Testable_Provider implements Provider {
 	 * Set the TTL for the cache for the current request.
 	 *
 	 * @param int $seconds TTL in seconds.
-	 * @return void
 	 */
 	public function ttl( int $seconds ): void {
 		$this->ttl = $seconds;
@@ -101,7 +100,6 @@ class Testable_Provider implements Provider {
 	 * Set the default TTL for the cache for all REST API requests.
 	 *
 	 * @param int $seconds TTL in seconds.
-	 * @return void
 	 */
 	public function ttl_rest_api( int $seconds ): void {
 		$this->ttl_rest_api = $seconds;
@@ -119,8 +117,6 @@ class Testable_Provider implements Provider {
 
 	/**
 	 * Disable the page cache for the current request.
-	 *
-	 * @return void
 	 */
 	public function disable_cache(): void {
 		$this->cache_disabled = true;
@@ -128,8 +124,6 @@ class Testable_Provider implements Provider {
 
 	/**
 	 * Disable the page cache for the user for this and all subsequent requests.
-	 *
-	 * @return void
 	 */
 	public function disable_cache_for_user(): void {
 		$this->cache_disabled_for_user = true;
@@ -137,8 +131,6 @@ class Testable_Provider implements Provider {
 
 	/**
 	 * Enable the page cache for the user for this and all subsequent requests.
-	 *
-	 * @return void
 	 */
 	public function enable_cache_for_user(): void {
 		$this->cache_disabled_for_user = false;
@@ -166,7 +158,6 @@ class Testable_Provider implements Provider {
 	 * Register a cache group.
 	 *
 	 * @param array<int, string> $groups The groups to register.
-	 * @return void
 	 */
 	public function register_groups( array $groups ): void {
 		foreach ( $groups as $group ) {
@@ -178,7 +169,6 @@ class Testable_Provider implements Provider {
 	 * Register a cache group.
 	 *
 	 * @param string $group The group to register.
-	 * @return void
 	 */
 	public function register_group( string $group ): void {
 		$this->groups[ $group ] = $group;
@@ -189,7 +179,7 @@ class Testable_Provider implements Provider {
 	 *
 	 * @return array<int, string> The registered groups.
 	 */
-	public function groups(): array {
+	public function get_groups(): array {
 		return array_keys( $this->groups );
 	}
 
@@ -198,7 +188,6 @@ class Testable_Provider implements Provider {
 	 *
 	 * @param string $group The group to assign the user to.
 	 * @param string $segment The segment within the group to assign the user to.
-	 * @return void
 	 */
 	public function set_group_for_user( string $group, string $segment ): void {
 		$this->groups[ $group ] = $segment;
@@ -229,7 +218,6 @@ class Testable_Provider implements Provider {
 	 * Block a user by IP address.
 	 *
 	 * @param array<int, string>|string $ip The IP address(es) to block.
-	 * @return void
 	 */
 	public function block_ip( array|string $ip ): void {
 		$this->blocked_ips = array_merge( $this->blocked_ips, (array) $ip );
@@ -239,7 +227,6 @@ class Testable_Provider implements Provider {
 	 * Block a user by user agent.
 	 *
 	 * @param array<int, string>|string $user_agent The user agent(s) to block.
-	 * @return void
 	 */
 	public function block_user_agent( array|string $user_agent ): void {
 		$this->blocked_user_agents = array_merge( $this->blocked_user_agents, (array) $user_agent );
@@ -269,7 +256,6 @@ class Testable_Provider implements Provider {
 	 * Purge a specific URL from the cache.
 	 *
 	 * @param string $url The URL to purge.
-	 * @return void
 	 */
 	public function purge( string $url ): void {
 		$this->purged_urls[] = $url;
@@ -289,7 +275,6 @@ class Testable_Provider implements Provider {
 	 * Purge a specific post from the cache.
 	 *
 	 * @param WP_Post|int $post The post to purge.
-	 * @return void
 	 */
 	public function purge_post( WP_Post|int $post ): void {
 		$post = get_post( $post );
@@ -305,7 +290,6 @@ class Testable_Provider implements Provider {
 	 * Purge a specific term from the cache.
 	 *
 	 * @param WP_Term|int $term The term to purge.
-	 * @return void
 	 */
 	public function purge_term( WP_Term|int $term ): void {
 		$term = get_term( $term );
