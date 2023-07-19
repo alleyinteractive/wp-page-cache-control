@@ -11,12 +11,20 @@ use WPCOM_VIP_Cache_Manager;
  * WordPress VIP Provider
  */
 class Test_VIP_Provider extends Test_Case {
+	protected VIP_Provider $provider;
+
 	protected function setUp(): void {
 		parent::setUp();
+
+		if ( ! class_exists( \Vary_Cache::class ) ) {
+			$this->markTestSkipped( 'VIP Provider not loaded' );
+		}
 
 		add_filter( 'wp_page_cache_control_provider', fn () => VIP_Provider::class );
 
 		$this->assertInstanceOf( VIP_Provider::class, wp_page_cache_control() );
+
+		$this->provider = wp_page_cache_control();
 	}
 
 	protected function tearDown(): void {
@@ -29,34 +37,34 @@ class Test_VIP_Provider extends Test_Case {
 	}
 
 	public function test_ttl() {
-		wp_page_cache_control()->ttl( 1800 );
+		$this->provider->ttl( 1800 );
 
-		Header::assertSent( 'Cache-Control', 'max-age=1800' );
+		static::assertHeaderSent( 'Cache-Control', 'max-age=1800' );
 	}
 
 	public function test_disable_cache() {
-		wp_page_cache_control()->disable_cache();
+		$this->provider->disable_cache();
 
-		Header::assertSent( 'Cache-Control', 'no-cache, must-revalidate, max-age=0' );
+		static::assertHeaderSent( 'Cache-Control', 'no-cache, must-revalidate, max-age=0' );
 
 		$this->assertFalse( Vary_Cache::is_user_in_nocache() );
 	}
 
 	public function test_disable_cache_for_user() {
-		wp_page_cache_control()->disable_cache_for_user();
+		$this->provider->disable_cache_for_user();
 
-		Header::assertNoneSent();
+		static::assertNoHeadersSent();
 
 		$this->assertTrue( Vary_Cache::is_user_in_nocache() );
 
-		wp_page_cache_control()->enable_cache_for_user();
+		$this->provider->enable_cache_for_user();
 
 		$this->assertFalse( Vary_Cache::is_user_in_nocache() );
 	}
 
 	public function test_register_groups() {
-		wp_page_cache_control()->register_group( 'test-group' );
-		wp_page_cache_control()->register_groups( [ 'test-group-1', 'test-group-2' ] );
+		$this->provider->register_group( 'test-group' );
+		$this->provider->register_groups( [ 'test-group-1', 'test-group-2' ] );
 
 		$this->assertEquals(
 			[ 'test-group', 'test-group-1', 'test-group-2' ],
@@ -65,21 +73,21 @@ class Test_VIP_Provider extends Test_Case {
 
 		$this->assertEquals(
 			[ 'test-group', 'test-group-1', 'test-group-2' ],
-			wp_page_cache_control()->groups(),
+			$this->provider->get_groups(),
 		);
 	}
 
 	public function test_user_groups_and_segments() {
-		wp_page_cache_control()->register_group( 'test-group' );
-		wp_page_cache_control()->set_group_for_user( 'test-group', 'segment' );
+		$this->provider->register_group( 'test-group' );
+		$this->provider->set_group_for_user( 'test-group', 'segment' );
 
-		$this->assertTrue( wp_page_cache_control()->is_user_in_group( 'test-group' ) );
-		$this->assertTrue( wp_page_cache_control()->is_user_in_group_segment( 'test-group', 'segment' ) );
-		$this->assertFalse( wp_page_cache_control()->is_user_in_group_segment( 'test-group', 'other-segment' ) );
+		$this->assertTrue( $this->provider->is_user_in_group( 'test-group' ) );
+		$this->assertTrue( $this->provider->is_user_in_group_segment( 'test-group', 'segment' ) );
+		$this->assertFalse( $this->provider->is_user_in_group_segment( 'test-group', 'other-segment' ) );
 	}
 
 	public function test_purge() {
-		wp_page_cache_control()->purge( home_url( '/example/' ) );
+		$this->provider->purge( home_url( '/example/' ) );
 
 		$this->assertContains(
 			home_url( '/example/' ),
@@ -90,7 +98,7 @@ class Test_VIP_Provider extends Test_Case {
 	public function test_purge_post() {
 		$post_id = static::factory()->post->create();
 
-		wp_page_cache_control()->purge_post( $post_id );
+		$this->provider->purge_post( $post_id );
 
 		$this->assertContains(
 			get_permalink( $post_id ),
@@ -101,7 +109,7 @@ class Test_VIP_Provider extends Test_Case {
 	public function test_purge_term() {
 		$term_id = static::factory()->term->create();
 
-		wp_page_cache_control()->purge_term( $term_id );
+		$this->provider->purge_term( $term_id );
 
 		$this->assertContains(
 			get_term_link( $term_id ),
@@ -110,11 +118,11 @@ class Test_VIP_Provider extends Test_Case {
 	}
 
 	public function test_purge_site_cache() {
-		wp_page_cache_control()->flush();
+		$this->provider->flush();
 
 		$post_id = static::factory()->post->create();
 
-		wp_page_cache_control()->purge_post( $post_id );
+		$this->provider->purge_post( $post_id );
 
 		// It shouldn't have the post URL in the queue because the site cache
 		// was flushed. This is a workaround since the flag is a private

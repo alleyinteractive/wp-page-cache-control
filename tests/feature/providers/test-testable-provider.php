@@ -18,45 +18,45 @@ class Test_Testable_Provider extends Test_Case {
 	}
 
 	public function test_ttl() {
-		wp_page_cache_control()->ttl( 1800 );
+		$this->provider->ttl( 1800 );
 
 		$this->assertTrue( $this->provider->has_ttl( 1800 ) );
 		$this->assertFalse( $this->provider->has_ttl( 123 ) );
 	}
 
 	public function test_disable_cache() {
-		wp_page_cache_control()->disable_cache();
+		$this->provider->disable_cache();
 
 		$this->assertTrue( $this->provider->is_user_cache_disabled() );
 	}
 
 	public function test_disable_cache_for_user() {
-		wp_page_cache_control()->disable_cache_for_user();
+		$this->provider->disable_cache_for_user();
 
 		$this->assertTrue( $this->provider->is_user_cache_disabled_for_user() );
 	}
 
 	public function test_register_groups() {
-		wp_page_cache_control()->register_group( 'test-group' );
-		wp_page_cache_control()->register_groups( [ 'test-group-1', 'test-group-2' ] );
+		$this->provider->register_group( 'test-group' );
+		$this->provider->register_groups( [ 'test-group-1', 'test-group-2' ] );
 
 		$this->assertEquals(
 			[ 'test-group', 'test-group-1', 'test-group-2' ],
-			wp_page_cache_control()->groups(),
+			$this->provider->get_groups(),
 		);
 	}
 
 	public function test_user_groups_and_segments() {
-		wp_page_cache_control()->register_group( 'test-group' );
-		wp_page_cache_control()->set_group_for_user( 'test-group', 'segment' );
+		$this->provider->register_group( 'test-group' );
+		$this->provider->set_group_for_user( 'test-group', 'segment' );
 
-		$this->assertTrue( wp_page_cache_control()->is_user_in_group( 'test-group' ) );
-		$this->assertTrue( wp_page_cache_control()->is_user_in_group_segment( 'test-group', 'segment' ) );
-		$this->assertFalse( wp_page_cache_control()->is_user_in_group_segment( 'test-group', 'other-segment' ) );
+		$this->assertTrue( $this->provider->is_user_in_group( 'test-group' ) );
+		$this->assertTrue( $this->provider->is_user_in_group_segment( 'test-group', 'segment' ) );
+		$this->assertFalse( $this->provider->is_user_in_group_segment( 'test-group', 'other-segment' ) );
 	}
 
 	public function test_purge() {
-		wp_page_cache_control()->purge( home_url( '/example/' ) );
+		$this->provider->purge( home_url( '/example/' ) );
 
 		$this->assertTrue(
 			$this->provider->is_purged( home_url( '/example/' ) ),
@@ -66,7 +66,7 @@ class Test_Testable_Provider extends Test_Case {
 	public function test_purge_post() {
 		$post_id = static::factory()->post->create();
 
-		wp_page_cache_control()->purge_post( $post_id );
+		$this->provider->purge_post( $post_id );
 
 		$this->assertTrue(
 			$this->provider->is_purged( get_permalink( $post_id ) ),
@@ -76,7 +76,7 @@ class Test_Testable_Provider extends Test_Case {
 	public function test_purge_term() {
 		$term_id = static::factory()->term->create();
 
-		wp_page_cache_control()->purge_term( $term_id );
+		$this->provider->purge_term( $term_id );
 
 		$this->assertTrue(
 			$this->provider->is_purged( get_term_link( $term_id ) ),
@@ -84,7 +84,7 @@ class Test_Testable_Provider extends Test_Case {
 	}
 
 	public function test_purge_site_cache() {
-		wp_page_cache_control()->flush();
+		$this->provider->flush();
 
 		$this->assertTrue( $this->provider->is_site_cache_purged() );
 	}

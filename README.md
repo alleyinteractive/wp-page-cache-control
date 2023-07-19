@@ -145,6 +145,47 @@ wp_page_cache_control()->is_user_in_group( 'special-user-group' );
 wp_page_cache_control()->is_user_in_group( 'special-user-group', 'segment' );
 ```
 
+### Testing Headers
+
+The plugin supports faking the sending of headers sent through the plugin for testing purposes. To enable this, call the following code:
+
+```php
+use Alley\WP\WP_Page_Cache_Control\Header;
+
+Header::fake();
+```
+
+Once enabled, you can use the following methods to test headers being sent with
+the `Alley\WP\WP_Page_Cache_Control\Concerns\Tests_Headers` trait:
+
+```php
+namespace Alley\WP\My_Plugin\Tests;
+
+use Alley\WP\WP_Page_Cache_Control\Concerns\Tests_Headers;
+use Alley\WP\WP_Page_Cache_Control\Header;
+use Mantle\Testkit\Test_Case;
+
+class Example_Test extends Test_Case {
+	use Tests_Headers;
+
+	protected function setUp(): void {
+		parent::setUp();
+
+		Header::fake();
+	}
+
+	public function test_example() {
+		// Perform some action that should send a header.
+
+		static::assertHeaderSent( 'X-My-Header', 'optional value' );
+		static::assertHeaderNotSent( 'X-My-Other-Header', 'optional value' );
+
+		// static::assertAnyHeadersSent() and static::assertNoHeadersSent()
+		// are also available to assert that any headers were sent or not sent.
+	}
+}
+```
+
 ## Testing
 
 Run `npm run test` to run Jest tests against JavaScript files. Run
