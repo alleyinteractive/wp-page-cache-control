@@ -37,7 +37,7 @@
   <rule ref="WordPress.NamingConventions.PrefixAllGlobals">
     <properties>
       <property name="prefixes" type="array">
-        <element value="alleyinteractive" />
+        <element value="alley" />
         <element value="wp_page_cache_control" />
       </property>
     </properties>

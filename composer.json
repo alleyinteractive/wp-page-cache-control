@@ -16,12 +16,14 @@
     ],
     "require": {
         "php": "^8.0",
-        "alleyinteractive/composer-wordpress-autoloader": "^1.0"
+        "alleyinteractive/composer-wordpress-autoloader": "^1.0",
+        "mantle-framework/support": "^0.11"
     },
     "require-dev": {
         "alleyinteractive/alley-coding-standards": "^1.0",
         "mantle-framework/testkit": "^0.11",
-        "szepeviktor/phpstan-wordpress": "^1.1"
+        "szepeviktor/phpstan-wordpress": "^1.1",
+        "wp-coding-standards/wpcs": "dev-php-8-1 as 2.3.x-dev"
     },
     "config": {
         "allow-plugins": {
@@ -31,6 +33,11 @@
         },
         "sort-packages": true
     },
+    "autoload": {
+        "files": [
+            "src/helpers.php"
+        ]
+    },
     "extra": {
         "wordpress-autoloader": {
             "autoload": {
@@ -39,6 +46,12 @@
             "autoload-dev": {
                 "Alley\\WP\\WP_Page_Cache_Control\\Tests": "tests"
             }
+        }
+    },
+    "repositories": {
+        "wpcs": {
+            "type": "vcs",
+            "url": "https://github.com/alleyinteractive/WordPress-Coding-Standards"
         }
     },
     "minimum-stability": "dev",

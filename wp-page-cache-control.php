@@ -15,7 +15,10 @@
  * @package wp-page-cache-control
  */
 
-namespace Alley\WP\WP_Page_Cache_Control;
+use Alley\WP\WP_Page_Cache_Control\Header;
+use Alley\WP\WP_Page_Cache_Control\Providers\Provider;
+
+use function Alley\WP\WP_Page_Cache_Control\detect_provider;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -27,7 +30,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 define( 'WP_PAGE_CACHE_CONTROL_DIR', __DIR__ );
 
 // Check if Composer is installed (remove if Composer is not required for your plugin).
-if ( ! file_exists( __DIR__ . '/vendor/autoload.php' ) ) {
+if ( ! file_exists( __DIR__ . '/vendor/wordpress-autoload.php' ) ) {
 	// Will also check for the presence of an already loaded Composer autoloader
 	// to see if the Composer dependencies have been installed in a parent
 	// folder. This is useful for when the plugin is loaded as a Composer
@@ -48,16 +51,58 @@ if ( ! file_exists( __DIR__ . '/vendor/autoload.php' ) ) {
 	}
 } else {
 	// Load Composer dependencies.
-	require_once __DIR__ . '/vendor/autoload.php';
+	require_once __DIR__ . '/vendor/wordpress-autoload.php';
 }
 
 // Load the plugin's main files.
 require_once __DIR__ . '/src/assets.php';
 
 /**
- * Instantiate the plugin.
+ * The cache provider instance.
+ *
+ * @var Provider|null
  */
-function main(): void {
-	// ...
+static $wp_page_cache_control_provider = null;
+
+/**
+ * Retrieve the cache provider instance.
+ *
+ * @throws InvalidArgumentException If the provider class does not exist.
+ *
+ * @return Provider
+ */
+function wp_page_cache_control(): Provider {
+	global $wp_page_cache_control_provider;
+
+	if ( ! isset( $wp_page_cache_control_provider ) ) {
+		/**
+		 * Filter the cache provider class.
+		 *
+		 * @param string $wp_page_cache_control_provider The cache provider class.
+		 */
+		$wp_page_cache_control_provider = apply_filters( 'wp_page_cache_control_provider', detect_provider() );
+
+		if ( empty( $wp_page_cache_control_provider ) || ! class_exists( $wp_page_cache_control_provider ) ) {
+			throw new InvalidArgumentException(
+				"Invalid provider class provided. Expected class to exist: {$wp_page_cache_control_provider}",
+			);
+		}
+
+		$wp_page_cache_control_provider = new $wp_page_cache_control_provider();
+	}
+
+	return $wp_page_cache_control_provider;
 }
-main();
+add_action( 'muplugins_loaded', __NAMESPACE__ . '\\wp_page_cache_control' ); // @phpstan-ignore-line should not return anything
+
+/**
+ * Setup the header handler to send the headers on the 'send_headers' action.
+ * Also, setup the cache provider to fire their headers as well. Runs late to
+ * catch any changes that may happen earlier in 'send_headers'.
+ */
+function wp_page_cache_control_send_headers(): void {
+	wp_page_cache_control()->send_headers();
+
+	Header::send_headers();
+}
+add_action( 'send_headers', __NAMESPACE__ . '\\wp_page_cache_control_send_headers', PHP_INT_MAX );

@@ -1,39 +1,189 @@
 # WP Page Cache Control
 
-Contributors: alleyinteractive
-
-Tags: alleyinteractive, wp-page-cache-control
-
-Stable tag: 0.1.0
-
-Requires at least: 5.9
-
-Tested up to: 6.1
-
-Requires PHP: 8.0
-
-License: GPL v2 or later
-
 [![Coding Standards](https://github.com/alleyinteractive/wp-page-cache-control/actions/workflows/coding-standards.yml/badge.svg)](https://github.com/alleyinteractive/wp-page-cache-control/actions/workflows/coding-standards.yml)
 [![Testing Suite](https://github.com/alleyinteractive/wp-page-cache-control/actions/workflows/unit-test.yml/badge.svg)](https://github.com/alleyinteractive/wp-page-cache-control/actions/workflows/unit-test.yml)
 
-Control and modify the page cache for multiple hosting providers..
+Control and modify the page cache for multiple hosting providers.
 
 ## Installation
 
-You can install the package via composer:
+You can install the package via Composer:
 
 ```bash
 composer require alleyinteractive/wp-page-cache-control
 ```
 
+The plugin supports the following hosting providers and their respective page
+caching systems:
+
+- [Pantheon](https://pantheon.io/) via [their `Pantheon Advanced Cache`
+  plugin](https://github.com/pantheon-systems/pantheon-advanced-page-cache):
+  (`Alley\WP\WP_Page_Cache_Control\Providers\Pantheon_Provider`)
+- [WordPress VIP](https://vip.wordpress.com/) via [their `mu-plugins` repository](https://github.com/automattic/vip-go-mu-plugins/): (`Alley\WP\WP_Page_Cache_Control\Providers\VIP_Provider`)
+
+The plugin will attempt to detect the caching system in use and will load the
+appropriate provider class. It can also be controlled by the
+`wp_page_cache_control_provider` hook which should return a provider class
+string.
+
+The main goal of the plugin is to solve common page cache control needs across
+multiple hosting providers. It is not meant to be a complete solution for all
+page cache control needs. If you have a need that is not met by the plugin,
+please open an issue or pull request.
+
 ## Usage
 
-Activate the plugin in WordPress and use it like so:
+The plugin supports back-end page cache control including TTL, bypassing the
+page cache, user segmentation, and purging from the page cache. It also
+supports front-end segmentation.
+
+## Usage: Back-end
+
+Activate the plugin in WordPress and use the following methods as needed:
+
+### Controlling the Time-to-live (TTL) of the Current Request
 
 ```php
-$plugin = Alley\WP\WP_Page_Cache_Control\WP_Page_Cache_Control\WP_Page_Cache_Control();
-$plugin->perform_magic();
+wp_page_cache_control()->ttl( 3600 );
+```
+
+### Disabling the Page Cache for the Current Request
+
+```php
+wp_page_cache_control()->disable_cache();
+```
+### Disabling the Page Cache for the Current User
+
+Disabling the page cache for the current user will cause the user to bypass the
+page cache for the current and subsequent requests. This is useful for testing
+or for logged-in users.
+
+```php
+wp_page_cache_control()->disable_cache_for_user();
+
+// enabling it again via:
+wp_page_cache_control()->enable_cache_for_user();
+```
+
+### Segmenting the Page Cache
+
+See [Page Cache Segmentation](#page-cache-segmentation) for more information.
+
+```php
+wp_page_cache_control()->register_group( 'special-user-group' );
+
+// Add the current user to the group (only needs to be done once).
+wp_page_cache_control()->set_group_for_user( 'special-user-group', 'segment' );
+```
+
+### Purging a Specific URL
+
+```php
+wp_page_cache_control()->purge( home_url( '/example/' );
+```
+
+### Purging for a Post or Term
+
+```php
+wp_page_cache_control()->purge_post( $post_id );
+
+wp_page_cache_control()->purge_term( $term_id );
+```
+
+### Purging the Entire Page Cache
+
+**Warning:** This will purge the entire page cache. This is a dangerous operation and should be used with caution.
+
+```php
+wp_page_cache_control()->flush();
+```
+
+## Page Cache Segmentation
+
+Page Cache Segmentation is used when you want to vary or differ the page
+response to different users. For example, you may want to show a different
+version of a page to logged-in users than to logged-out users. Or you may want
+to hide ads for users from a specific country. Segmenting the page cache allows
+you to do this in a performant way.
+
+### Registering a Group
+
+To register a group, use the `register_group()` method:
+
+```php
+wp_page_cache_control()->register_group( 'special-user-group' );
+```
+
+Group names must be unique and must contain alphanumeric characters, dashes, and
+underscores only.
+
+### Adding a User to a Group
+
+To add a user to a group, use the `set_group_for_user()` method:
+
+```php
+wp_page_cache_control()->set_group_for_user( 'special-user-group', 'segment' );
+```
+
+The second parameter allows you to specify a segment within a group. For
+example, the group could be "logged-in" and the segment could be "digital
+subscriber". You could also have a different user in the "logged-in" group with
+the segment "print subscriber" to show a different version of the page to print
+subscribers.
+
+**Note:** A user cannot be removed from a group once added at this time. If you need
+to remove a user from a group, you can add them to a different segment of the
+same group.
+
+### Checking if a User is in a Group or Segment
+
+To check if a user is in a group or segment, use the `is_user_in_group()` method:
+
+```php
+wp_page_cache_control()->is_user_in_group( 'special-user-group' );
+
+wp_page_cache_control()->is_user_in_group( 'special-user-group', 'segment' );
+```
+
+### Testing Headers
+
+The plugin supports faking the sending of headers sent through the plugin for testing purposes. To enable this, call the following code:
+
+```php
+use Alley\WP\WP_Page_Cache_Control\Header;
+
+Header::fake();
+```
+
+Once enabled, you can use the following methods to test headers being sent with
+the `Alley\WP\WP_Page_Cache_Control\Concerns\Tests_Headers` trait:
+
+```php
+namespace Alley\WP\My_Plugin\Tests;
+
+use Alley\WP\WP_Page_Cache_Control\Concerns\Tests_Headers;
+use Alley\WP\WP_Page_Cache_Control\Header;
+use Mantle\Testkit\Test_Case;
+
+class Example_Test extends Test_Case {
+	use Tests_Headers;
+
+	protected function setUp(): void {
+		parent::setUp();
+
+		Header::fake();
+	}
+
+	public function test_example() {
+		// Perform some action that should send a header.
+
+		static::assertHeaderSent( 'X-My-Header', 'optional value' );
+		static::assertHeaderNotSent( 'X-My-Other-Header', 'optional value' );
+
+		// static::assertAnyHeadersSent() and static::assertNoHeadersSent()
+		// are also available to assert that any headers were sent or not sent.
+	}
+}
 ```
 
 ## Testing
@@ -46,44 +196,6 @@ happen when running development or production builds.
 
 Run `composer test` to run tests against PHPUnit and the PHP code in the plugin.
 
-### The `entries` directory and entry points
-
-All directories created in the `entries` directory can serve as entry points and will be compiled with [@wordpress/scripts](https://github.com/WordPress/gutenberg/blob/trunk/packages/scripts/README.md#scripts) into the `build` directory with an accompanied `index.asset.php` asset map.
-
-#### Enqueuing Entry Points
-
-You can also include an `index.php` file in the entry point directory for enqueueing or registering a script. This file will then be moved to the build directory and will be auto-loaded with the `load_scripts()` function in the `functions.php` file. Alternatively, if a script is to be enqueued elsewhere there are helper functions in the `src/assets.php` file for getting the assets.
-
-### Scaffold a dynamic block with `create-block`
-
-Use the `create-block` command to create custom blocks with [@alleyinteractive/create-block](https://github.com/alleyinteractive/alley-scripts/tree/main/packages/create-block) script and follow the prompts to generate all the block assets in the `blocks/` directory.
-Block registration, script creation, etc will be scaffolded from the `create-block` script. Run `npm run build` to compile and build the custom block. Blocks are enqueued using the `load_scripts()` function in `src/assets.php`.
-
-### Updating WP Dependencies
-
-Update the [WordPress dependency packages](https://developer.wordpress.org/block-editor/reference-guides/packages/packages-scripts/#packages-update) used in the project to their latest version.
-
-To update `@wordpress` dependencies to their latest version use the packages-update command:
-
-```sh
-npx wp-scripts packages-update
-```
-
-This script provides the following custom options:
-
--   `--dist-tag` – allows specifying a custom dist-tag when updating npm packages. Defaults to `latest`. This is especially useful when using [`@wordpress/dependency-extraction-webpack-plugin`](https://www.npmjs.com/package/@wordpress/dependency-extraction-webpack-plugin). It lets installing the npm dependencies at versions used by the given WordPress major version for local testing, etc. Example:
-
-```sh
-npx wp-scripts packages-update --dist-tag=wp-WPVERSION`
-```
-
-Where `WPVERSION` is the version of WordPress you are targeting. The version
-must include both the major and minor version (e.g., `6.1`). For example:
-
-```sh
-npx wp-scripts packages-update --dist-tag=wp-6.1`
-```
-
 ## Changelog
 
 Please see [CHANGELOG](CHANGELOG.md) for more information on what has changed recently.
@@ -92,9 +204,9 @@ Please see [CHANGELOG](CHANGELOG.md) for more information on what has changed re
 
 This project is actively maintained by [Alley
 Interactive](https://github.com/alleyinteractive). Like what you see? [Come work
-with us](https://alley.co/careers/).
+with us](https://alley.com/careers/).
 
-- [Sean Fisher](https://github.com/Sean Fisher)
+- [Sean Fisher](https://github.com/srtfisher)
 - [All Contributors](../../contributors)
 
 ## License
