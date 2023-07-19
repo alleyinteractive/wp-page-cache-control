@@ -10,7 +10,7 @@ export * from './provider';
 declare global {
   interface Window {
     wpPageCacheControlSettings: {
-      provider: 'VIPProvider' | 'PantheonProvider' | 'TestableProvider';
+      provider: 'VIPProvider' | 'PantheonProvider' | 'DefaultCacheProvider';
       registeredGroups: string[];
     };
     wpPageCacheControl: wpPageCacheControl.WPPageCacheControlProvider;

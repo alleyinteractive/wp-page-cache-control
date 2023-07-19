@@ -12,7 +12,7 @@ import {
 
 const {
   wpPageCacheControlSettings: {
-    provider = 'TestableProvider',
+    provider = 'DefaultCacheProvider',
   },
 } = window;
 
@@ -21,7 +21,7 @@ const providers = {
   PantheonProvider: PantheonCacheProvider,
 };
 
-if (typeof providers[provider as keyof typeof providers] === 'undefined') {
+if (typeof providers[provider as keyof typeof providers] === 'undefined' || provider === 'DefaultCacheProvider') {
   console.error(`WP Page Cache Control: Unknown provider: ${provider}`); // eslint-disable-line no-console
   window.wpPageCacheControl = new DefaultCacheProvider();
 } else {
