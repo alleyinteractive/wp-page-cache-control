@@ -1,12 +1,11 @@
 import { readCookiesWithPrefix, setCookie } from '@/services/cookie';
-import WPPageCacheControlProvider from '../interface';
 
 const COOKIE_PREFIX = 'STYXKEY-';
 
 /**
  * @link https://docs.pantheon.io/cookies#cache-varying-cookies
  */
-class PantheonCacheProvider implements WPPageCacheControlProvider {
+class PantheonCacheProvider implements wpPageCacheControl.WPPageCacheControlProvider {
   groups: Record<string, string> = {};
 
   constructor() {

@@ -1,10 +1,9 @@
-import WPPageCacheControlProvider from '../interface';
 import { parseSegmentGroups, saveSegmentCookie } from './helpers';
 
 /**
  * WordPress VIP Cache Segmentation Provider
  */
-class WordPressVipCacheProvider implements WPPageCacheControlProvider {
+class WordPressVipCacheProvider implements wpPageCacheControl.WPPageCacheControlProvider {
   groups: Record<string, string> = {};
 
   constructor() {

@@ -1,3 +1,3 @@
-export type { default as WPPageCacheControlProvider } from './interface';
+export * from './default';
 export * from './pantheon';
 export * from './vip';

@@ -41,7 +41,7 @@ function action_wp_enqueue_scripts(): void {
 		'wpPageCacheControlSettings',
 		[
 			'provider'         => Str::studly( Str::after_last( wp_page_cache_control()::class, '\\' ) ),
-			'registeredGroups' => wp_page_cache_control()->groups(),
+			'registeredGroups' => wp_page_cache_control()->get_groups(),
 		],
 	);
 }
