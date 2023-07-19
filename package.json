@@ -8,6 +8,7 @@
     "node": "16",
     "npm": "8"
   },
+  "private": false,
   "browserslist": [
     "defaults",
     "not IE 11"
