@@ -1,35 +1,18 @@
-declare namespace wpPageCacheControl {
-  interface WPPageCacheControlProvider {
-    /**
-     * Cache groups for the current user.
-     */
-    groups: Record<string, string>;
-    /**
-     * Method called when the cache groups should be read/updated.
-     */
-    read: () => void;
-    /**
-     * Check if the current user is in a cache group.
-     */
-    isUserInGroup: (group: string) => boolean;
-    /**
-     * Check if the current user is in a cache group segment.
-     */
-    isUserInGroupSegment: (group: string, segment: string) => boolean;
-    /**
-     * Set the cache group segment for the current user.
-     */
-    setGroupForUser: (group: string, segment: string) => boolean;
-  }
+/* eslint-disable import/extensions */
 
-  namespace events {
-    /**
-     * Event fired when the page cache control provider is ready.
-     */
-    interface ReadyEvent extends CustomEvent {
-      detail: {
-        provider: WPPageCacheControlProvider;
-      };
-    }
+export * from './provider';
+
+/**
+ * Global Type Roots
+ *
+ * @link https://www.typescriptlang.org/tsconfig/#typeRoots
+ */
+declare global {
+  interface Window {
+    wpPageCacheControlSettings: {
+      provider: 'VIPProvider' | 'PantheonProvider' | 'TestableProvider';
+      registeredGroups: string[];
+    };
+    wpPageCacheControl: wpPageCacheControl.WPPageCacheControlProvider;
   }
 }
