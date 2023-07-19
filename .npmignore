@@ -1,6 +1,7 @@
 *
 !tsconfig.json
 !package.json
+!package-lock.json
 !types/index.d.ts
 !README.md
 !LICENSE
