@@ -1,5 +1,10 @@
 # Ignore any PHP files
 src/
+tests/
+*.config.js
+phpstan.neon
+phpunit.xml
+services/
 *.php
 .phpcs
 .github
