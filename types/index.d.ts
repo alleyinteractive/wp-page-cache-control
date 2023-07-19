@@ -1,18 +1,40 @@
-/* eslint-disable import/extensions */
-
-export * from './provider';
-
 /**
- * Global Type Roots
+ * WordPress Page Cache Control
  *
- * @link https://www.typescriptlang.org/tsconfig/#typeRoots
+ * @link https://github.com/alleyinteractive/wp-page-cache-control
  */
-declare global {
-  interface Window {
-    wpPageCacheControlSettings: {
-      provider: 'VIPProvider' | 'PantheonProvider' | 'DefaultCacheProvider';
-      registeredGroups: string[];
-    };
-    wpPageCacheControl: wpPageCacheControl.WPPageCacheControlProvider;
+declare namespace wpPageCacheControl {
+  interface WPPageCacheControlProvider {
+    /**
+     * Cache groups for the current user.
+     */
+    groups: Record<string, string>;
+    /**
+     * Method called when the cache groups should be read/updated.
+     */
+    read: () => void;
+    /**
+     * Check if the current user is in a cache group.
+     */
+    isUserInGroup: (group: string) => boolean;
+    /**
+     * Check if the current user is in a cache group segment.
+     */
+    isUserInGroupSegment: (group: string, segment: string) => boolean;
+    /**
+     * Set the cache group segment for the current user.
+     */
+    setGroupForUser: (group: string, segment: string) => boolean;
+  }
+
+  namespace events {
+    /**
+     * Event fired when the page cache control provider is ready.
+     */
+    interface ReadyEvent extends CustomEvent {
+      detail: {
+        provider: WPPageCacheControlProvider;
+      };
+    }
   }
 }

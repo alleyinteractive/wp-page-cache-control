@@ -10,6 +10,16 @@ import {
   WordPressVipCacheProvider,
 } from '@/services/providers';
 
+declare global {
+  interface Window {
+    wpPageCacheControlSettings: {
+      provider: 'VIPProvider' | 'PantheonProvider' | 'DefaultCacheProvider';
+      registeredGroups: string[];
+    };
+    wpPageCacheControl: wpPageCacheControl.WPPageCacheControlProvider;
+  }
+}
+
 const {
   wpPageCacheControlSettings: {
     provider = 'DefaultCacheProvider',

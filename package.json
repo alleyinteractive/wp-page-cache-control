@@ -1,9 +1,9 @@
 {
   "name": "@alleyinteractive/wp-page-cache-control",
-  "version": "1.0.0",
+  "version": "1.0.0~alpha.1",
   "license": "GPL-2.0-or-later",
-  "main": "wp-page-cache-control.php",
-  "types": "types/index.d.ts",
+  "main": "./types/index.d.ts",
+  "types": "./types/index.d.ts",
   "engines": {
     "node": "16",
     "npm": "8"
