@@ -1,37 +1,8 @@
-# Ignore any PHP files
-src/
-tests/
-*.config.js
-phpstan.neon
-phpunit.xml
-services/
-*.php
-.phpcs
-.github
-
-# Build files
-build
-vendor
-composer.lock
-node_modules
-
-# Log files
-*.log
-
-# Cache files
-.phpcs/*.json
-.phpunit.result.cache
-
-# Ignore temporary OS files
-.DS_Store
-.DS_Store?
-.Spotlight-V100
-.Trashes
-ehthumbs.db
-Thumbs.db
-.thumbsdb
-
-# IDE files
-*.code-workspace
-.idea
-.vscode
+*
+!tsconfig.json
+!package.json
+!types/index.d.ts
+!README.md
+!LICENSE
+!.npmignore
+!.nvmrc
