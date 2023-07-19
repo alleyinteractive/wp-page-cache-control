@@ -29,6 +29,9 @@ declare namespace wpPageCacheControl {
    */
   function setGroupForUser(group: string, segment: string): boolean;
 
+  /**
+   * Interface for the providers.
+   */
   interface WPPageCacheControlProvider {
     /**
      * Cache groups for the current user.
