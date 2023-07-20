@@ -2,7 +2,7 @@
 /**
  * Tests_Headers class file
  *
- * phpcs:disable WordPress.NamingConventions.ValidFunctionName.MethodNameInvalid
+ * phpcs:disable WordPress.NamingConventions.ValidFunctionName.MethodNameInvalid, WordPress.PHP.DevelopmentFunctions.error_log_trigger_error
  *
  * @package wp-page-cache-control
  */
@@ -24,6 +24,11 @@ trait Tests_Headers {
 	 */
 	public static function assertHeaderSent( string $header, ?string $value = null ): void {
 		if ( ! class_exists( Assert::class ) ) {
+			trigger_error(
+				'Assert class not found. Please install phpunit/phpunit to use this method.',
+				E_USER_WARNING
+			);
+
 			return;
 		}
 
@@ -39,12 +44,12 @@ trait Tests_Headers {
 
 		foreach ( Header::$record[ $header ] as $sent_value ) {
 			if ( $value === $sent_value ) {
-				Assert::assertTrue( true, "Header $header was sent with value $value" );
+				Assert::assertTrue( true, "Header $header was sent with value '$value'" );
 				return;
 			}
 		}
 
-		Assert::fail( "Header $header was not sent with value $value" );
+		Assert::fail( "Header $header was not sent with value '$value'" );
 	}
 
 	/**
@@ -55,6 +60,11 @@ trait Tests_Headers {
 	 */
 	public static function assertHeaderNotSent( string $header, ?string $value = null ): void {
 		if ( ! class_exists( Assert::class ) ) {
+			trigger_error(
+				'Assert class not found. Please install phpunit/phpunit to use this method.',
+				E_USER_WARNING
+			);
+
 			return;
 		}
 
@@ -83,6 +93,11 @@ trait Tests_Headers {
 	 */
 	public static function assertAnyHeadersSent(): void {
 		if ( ! class_exists( Assert::class ) ) {
+			trigger_error(
+				'Assert class not found. Please install phpunit/phpunit to use this method.',
+				E_USER_WARNING
+			);
+
 			return;
 		}
 
@@ -94,6 +109,11 @@ trait Tests_Headers {
 	 */
 	public static function assertNoHeadersSent(): void {
 		if ( ! class_exists( Assert::class ) ) {
+			trigger_error(
+				'Assert class not found. Please install phpunit/phpunit to use this method.',
+				E_USER_WARNING
+			);
+
 			return;
 		}
 
