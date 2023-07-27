@@ -117,8 +117,9 @@ interface Provider {
 	 * Purge a specific URL from the cache.
 	 *
 	 * @param string $url The URL to purge.
+	 * @return mixed
 	 */
-	public function purge( string $url ): void;
+	public function purge( string $url ): mixed;
 
 	/**
 	 * Purge a specific post from the cache.

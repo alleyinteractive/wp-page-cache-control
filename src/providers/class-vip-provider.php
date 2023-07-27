@@ -194,9 +194,10 @@ class VIP_Provider implements Provider {
 	 * Purge a specific URL from the cache.
 	 *
 	 * @param string $url The URL to purge.
+	 * @return boolean|\WP_Error
 	 */
-	public function purge( string $url ): void {
-		wpcom_vip_purge_edge_cache_for_url( $url );
+	public function purge( string $url ): mixed {
+		return wpcom_vip_purge_edge_cache_for_url( $url );
 	}
 
 	/**

@@ -257,8 +257,10 @@ class Testable_Provider implements Provider {
 	 *
 	 * @param string $url The URL to purge.
 	 */
-	public function purge( string $url ): void {
+	public function purge( string $url ): mixed {
 		$this->purged_urls[] = $url;
+
+		return true;
 	}
 
 	/**
