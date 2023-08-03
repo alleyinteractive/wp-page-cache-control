@@ -38,4 +38,22 @@ class Test_Header extends Test_Case {
 		static::assertHeaderSent( 'cache-control' );
 		static::assertHeaderSent( 'cache-control', 'max-age=60' );
 	}
+
+	public function test_replace_header() {
+		Header::send( 'example', 'value' );
+		Header::send( 'example', 'new-value' );
+
+		static::assertHeaderSent( 'example' );
+		static::assertHeaderSent( 'example', 'new-value' );
+		static::assertHeaderNotSent( 'example', 'value' );
+	}
+
+	public function test_append_header() {
+		Header::send( 'example', 'value' );
+		Header::send( 'example', 'new-value', true );
+
+		static::assertHeaderSent( 'example' );
+		static::assertHeaderSent( 'example', 'value' );
+		static::assertHeaderSent( 'example', 'new-value' );
+	}
 }

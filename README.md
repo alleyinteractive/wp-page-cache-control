@@ -186,6 +186,35 @@ class Example_Test extends Test_Case {
 }
 ```
 
+## Usage: Front-end
+
+The package has a front-end integration to allow for segmenting the page cache
+in-browser. This is enabled by default but can be disabled by using the
+`wp_page_cache_control_enqueue_script` filter.
+
+Cache segmentation groups must be registered on the back end before they can be
+used on the front end. See [Registering a Group](#registering-a-group) for more
+information.
+
+```js
+wpPageCacheControl.setGroupForUser('logged-in-group', 'segment-name');
+
+// To remove a user from a group, you have to set them to a different segment.
+wpPageCacheControl.setGroupForUser('logged-in-group', 'different-name');
+
+// To check if a user is in a group or segment, use the following:
+wpPageCacheControl.isUserInGroup('logged-in-group');
+wpPageCacheControl.isUserInGroupSegment('logged-in-group', 'segment-name');
+
+// You can read the groups and segments from the page cache control object:\
+//
+//   wpPageCacheControl.groups;
+```
+
+Types are available for TypeScript users:
+
+	npm install --save-dev @alleyinteractive/wp-page-cache-control
+
 ## Testing
 
 Run `npm run test` to run Jest tests against JavaScript files. Run

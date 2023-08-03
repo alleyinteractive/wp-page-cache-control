@@ -73,11 +73,12 @@ class Header {
 	 *
 	 * @param string|array<string, string> $header The header(s) to send.
 	 * @param string                       $value                        The value of the header.
+	 * @param bool                         $append                       Whether to append the header or replace it, defaults to false.
 	 */
-	public static function send( array|string $header, string $value = '' ): void {
+	public static function send( array|string $header, string $value = '', bool $append = false ): void {
 		if ( is_array( $header ) ) {
 			foreach ( $header as $single_header ) {
-				static::send( $single_header, $value );
+				static::send( $single_header, $value, $append );
 			}
 
 			return;
@@ -85,7 +86,11 @@ class Header {
 
 		$header = strtolower( $header );
 
-		static::$record[ $header ][] = $value;
+		if ( $append ) {
+			static::$record[ $header ][] = $value;
+		} else {
+			static::$record[ $header ] = [ $value ];
+		}
 	}
 
 	/**

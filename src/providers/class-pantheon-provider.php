@@ -246,9 +246,12 @@ class Pantheon_Provider implements Provider {
 	 * Purge a specific URL from the cache.
 	 *
 	 * @param string $url The URL to purge.
+	 * @return \WP_Error|boolean
 	 */
-	public function purge( string $url ): void {
-		pantheon_wp_clear_edge_paths( [ $url ] );
+	public function purge( string $url ): mixed {
+		// pantheon_wp_clear_edge_paths() expects only a path, so we need to strip
+		// the domain and query string from the URL.
+		return pantheon_wp_clear_edge_paths( [ wp_parse_url( $url, PHP_URL_PATH ) ] );
 	}
 
 	/**
