@@ -7,7 +7,7 @@
  * Author: Sean Fisher
  * Author URI: https://github.com/alleyinteractive/wp-page-cache-control
  * Requires at least: 5.9
- * Tested up to: 6.2
+ * Tested up to: 6.3
  *
  * Text Domain: wp-page-cache-control
  * Domain Path: /languages/
