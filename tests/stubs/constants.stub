@@ -1,3 +1,0 @@
-<?php
-define( 'COOKIEPATH', '/' );
-define( 'COOKIE_DOMAIN', 'example.org' );
