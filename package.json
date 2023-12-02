@@ -39,7 +39,7 @@
   "devDependencies": {
     "@alleyinteractive/eslint-config": "^0.1.4",
     "@alleyinteractive/stylelint-config": "^0.0.2",
-    "@babel/preset-env": "^7.23.3",
+    "@babel/preset-env": "^7.23.5",
     "@types/jest": "^29.5.8",
     "@wordpress/babel-preset-default": "^7.14.0",
     "@wordpress/scripts": "^26.1.0",
