@@ -1,12 +1,12 @@
 {
   "name": "@alleyinteractive/wp-page-cache-control",
-  "version": "1.0.0-alpha.6",
+  "version": "1.0.0",
   "license": "GPL-2.0-or-later",
   "main": "./types/index.d.ts",
   "types": "./types/index.d.ts",
   "engines": {
-    "node": "16",
-    "npm": "8"
+    "node": "18",
+    "npm": "9"
   },
   "private": false,
   "browserslist": [
