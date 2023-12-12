@@ -2,5 +2,8 @@
   "extends": ["@alleyinteractive/eslint-config/typescript-react"],
   "settings": {
     "import/resolver": "webpack"
+  },
+  "globals": {
+    "wpPageCacheControl": true
   }
 }
