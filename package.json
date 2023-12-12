@@ -37,7 +37,7 @@
     "test": "jest --passWithNoTests"
   },
   "devDependencies": {
-    "@alleyinteractive/eslint-config": "^0.1.4",
+    "@alleyinteractive/eslint-config": "^0.1.5",
     "@alleyinteractive/stylelint-config": "^0.0.2",
     "@babel/preset-env": "^7.23.3",
     "@types/jest": "^29.5.8",
