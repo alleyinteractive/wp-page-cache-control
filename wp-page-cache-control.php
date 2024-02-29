@@ -3,7 +3,7 @@
  * Plugin Name: WP Page Cache Control
  * Plugin URI: https://github.com/alleyinteractive/wp-page-cache-control
  * Description: Control and modify the page cache for multiple hosting providers.
- * Version: 0.1.0
+ * Version: 0.1.2
  * Author: Sean Fisher
  * Author URI: https://github.com/alleyinteractive/wp-page-cache-control
  * Requires at least: 5.9
