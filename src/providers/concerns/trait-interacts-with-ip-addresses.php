@@ -57,6 +57,14 @@ trait Interacts_With_IP_Addresses {
 			}
 		}
 
+		if ( ! empty( $_SERVER['REMOTE_ADDR'] ) ) {
+			$hdr = strtolower( $_SERVER['REMOTE_ADDR'] );
+			$bin = inet_pton( $hdr );
+			if ( $bin === $ip || $hdr === $value ) {
+				return 'remote-addr';
+			}
+		}
+
 		return false;
 	}
 }

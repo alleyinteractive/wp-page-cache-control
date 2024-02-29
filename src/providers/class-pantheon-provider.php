@@ -68,7 +68,7 @@ class Pantheon_Provider implements Provider {
 	public function __construct() {
 		if ( ! function_exists( 'pantheon_wp_clear_edge_keys' ) ) {
 			throw new InvalidArgumentException(
-				'Pantheon Advanced Page Cache is not installed <https://github.com/pantheon-systems/pantheon-advanced-page-cache>'
+				'Pantheon Advanced Page Cache is not installed or is not yet loaded. Please install and load it from https://wordpress.org/plugins/pantheon-advanced-page-cache/ before using this provider.',
 			);
 		}
 
@@ -451,9 +451,12 @@ class Pantheon_Provider implements Provider {
 		}
 
 		if ( ! defined( 'WP_TESTS_DOMAIN' ) ) {
-			http_response_code( 403 );
-			header( 'Expires: Wed, 11 Jan 1984 05:00:00 GMT' );
-			header( 'Cache-Control: no-cache, must-revalidate, max-age=0' );
+			if ( ! headers_sent() ) {
+				http_response_code( 403 );
+				header( 'Expires: Wed, 11 Jan 1984 05:00:00 GMT' );
+				header( 'Cache-Control: no-cache, must-revalidate, max-age=0' );
+				header( 'X-Blocked-By: wp-page-cache-control' );
+			}
 
 			// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
 			error_log( sprintf( 'WP Page Cache Control Block: request was blocked based on "%s" with value of "%s"', $criteria, $value ) );
