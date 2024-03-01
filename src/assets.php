@@ -76,7 +76,7 @@ function action_wp_head(): void {
  * @param string $path The file path to validate.
  * @return bool        True if the path is valid and the file exists.
  */
-function validate_path( string $path ) : bool {
+function validate_path( string $path ): bool {
 	return 0 === validate_file( $path ) && file_exists( $path );
 }
 
@@ -132,7 +132,7 @@ function get_entry_asset_map( string $dir_entry_name ): array {
  *
  * @return array<int, string> The asset's dependency array.
  */
-function get_asset_dependency_array( string $dir_entry_name ) : array {
+function get_asset_dependency_array( string $dir_entry_name ): array {
 	return get_entry_asset_map( $dir_entry_name )['dependencies'] ?? [];
 }
 
@@ -143,7 +143,7 @@ function get_asset_dependency_array( string $dir_entry_name ) : array {
  *
  * @return string The asset's version hash.
  */
-function get_asset_version( string $dir_entry_name ) : string {
+function get_asset_version( string $dir_entry_name ): string {
 	return get_entry_asset_map( $dir_entry_name )['version'] ?? '1.0';
 }
 

@@ -3,7 +3,7 @@
  * Plugin Name: WP Page Cache Control
  * Plugin URI: https://github.com/alleyinteractive/wp-page-cache-control
  * Description: Control and modify the page cache for multiple hosting providers.
- * Version: 0.1.0
+ * Version: 0.1.2
  * Author: Sean Fisher
  * Author URI: https://github.com/alleyinteractive/wp-page-cache-control
  * Requires at least: 5.9
@@ -38,7 +38,7 @@ if ( ! file_exists( __DIR__ . '/vendor/wordpress-autoload.php' ) ) {
 	if ( ! class_exists( \Composer\InstalledVersions::class ) ) {
 		\add_action(
 			'admin_notices',
-			function() {
+			function () {
 				?>
 				<div class="notice notice-error">
 					<p><?php esc_html_e( 'Composer is not installed and wp-page-cache-control cannot load. Try using a `*-built` branch if the plugin is being loaded as a submodule.', 'wp-page-cache-control' ); ?></p>
@@ -84,7 +84,7 @@ function wp_page_cache_control(): Provider {
 
 		if ( empty( $wp_page_cache_control_provider ) || ! class_exists( $wp_page_cache_control_provider ) ) {
 			throw new InvalidArgumentException(
-				"Invalid provider class provided. Expected class to exist: {$wp_page_cache_control_provider}",
+				esc_html( "Invalid provider class provided. Expected class to exist: {$wp_page_cache_control_provider}" )
 			);
 		}
 

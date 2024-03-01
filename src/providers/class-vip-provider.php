@@ -130,7 +130,7 @@ class VIP_Provider implements Provider {
 
 		if ( is_wp_error( $response ) ) {
 			throw new InvalidArgumentException(
-				$response->get_error_message()
+				esc_html( $response->get_error_message() )
 			);
 		}
 	}

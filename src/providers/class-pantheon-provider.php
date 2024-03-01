@@ -21,8 +21,8 @@ use function Mantle\Support\Helpers\collect;
  * @link https://docs.pantheon.io/cookies#cache-varying-cookies
  */
 class Pantheon_Provider implements Provider {
-	use Concerns\Interacts_With_IP_Addresses,
-		Concerns\Manages_Cookies;
+	use Concerns\Interacts_With_IP_Addresses;
+	use Concerns\Manages_Cookies;
 
 	/**
 	 * Cookie name for the no-cache cookie.
@@ -68,7 +68,7 @@ class Pantheon_Provider implements Provider {
 	public function __construct() {
 		if ( ! function_exists( 'pantheon_wp_clear_edge_keys' ) ) {
 			throw new InvalidArgumentException(
-				'Pantheon Advanced Page Cache is not installed <https://github.com/pantheon-systems/pantheon-advanced-page-cache>'
+				'Pantheon Advanced Page Cache is not installed or is not yet loaded. Please install and load it from https://wordpress.org/plugins/pantheon-advanced-page-cache/ before using this provider.',
 			);
 		}
 
@@ -146,7 +146,7 @@ class Pantheon_Provider implements Provider {
 		if ( ! isset( $this->groups[ $group ] ) ) {
 			if ( ! $this->is_valid_group_name( $group ) ) {
 				throw new InvalidArgumentException(
-					"Invalid group name: {$group}"
+					esc_html( "Invalid group name: {$group}" )
 				);
 			}
 
@@ -174,7 +174,7 @@ class Pantheon_Provider implements Provider {
 	public function set_group_for_user( string $group, string $segment ): void {
 		if ( ! isset( $this->groups[ $group ] ) ) {
 			throw new InvalidArgumentException(
-				"Unknown cache group: {$group}"
+				esc_html( "Unknown cache group: {$group}" )
 			);
 		}
 
@@ -218,7 +218,7 @@ class Pantheon_Provider implements Provider {
 			return;
 		}
 
-		if ( $criteria = $this->is_current_ip( $ip ) ) { // phpcs:ignore WordPress.CodeAnalysis.AssignmentInCondition.Found, Squiz.PHP.DisallowMultipleAssignments.FoundInControlStructure
+		if ( $criteria = $this->is_current_ip( $ip ) ) { // phpcs:ignore Generic.CodeAnalysis.AssignmentInCondition.Found, Squiz.PHP.DisallowMultipleAssignments.FoundInControlStructure
 			$this->block_and_log( $ip, $criteria );
 		}
 	}
@@ -451,9 +451,12 @@ class Pantheon_Provider implements Provider {
 		}
 
 		if ( ! defined( 'WP_TESTS_DOMAIN' ) ) {
-			http_response_code( 403 );
-			header( 'Expires: Wed, 11 Jan 1984 05:00:00 GMT' );
-			header( 'Cache-Control: no-cache, must-revalidate, max-age=0' );
+			if ( ! headers_sent() ) {
+				http_response_code( 403 );
+				header( 'Expires: Wed, 11 Jan 1984 05:00:00 GMT' );
+				header( 'Cache-Control: no-cache, must-revalidate, max-age=0' );
+				header( 'X-Blocked-By: wp-page-cache-control' );
+			}
 
 			// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
 			error_log( sprintf( 'WP Page Cache Control Block: request was blocked based on "%s" with value of "%s"', $criteria, $value ) );
