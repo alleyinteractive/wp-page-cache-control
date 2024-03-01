@@ -21,8 +21,8 @@ use function Mantle\Support\Helpers\collect;
  * @link https://docs.pantheon.io/cookies#cache-varying-cookies
  */
 class Pantheon_Provider implements Provider {
-	use Concerns\Interacts_With_IP_Addresses,
-		Concerns\Manages_Cookies;
+	use Concerns\Interacts_With_IP_Addresses;
+	use Concerns\Manages_Cookies;
 
 	/**
 	 * Cookie name for the no-cache cookie.
@@ -146,7 +146,7 @@ class Pantheon_Provider implements Provider {
 		if ( ! isset( $this->groups[ $group ] ) ) {
 			if ( ! $this->is_valid_group_name( $group ) ) {
 				throw new InvalidArgumentException(
-					"Invalid group name: {$group}"
+					esc_html( "Invalid group name: {$group}" )
 				);
 			}
 
@@ -174,7 +174,7 @@ class Pantheon_Provider implements Provider {
 	public function set_group_for_user( string $group, string $segment ): void {
 		if ( ! isset( $this->groups[ $group ] ) ) {
 			throw new InvalidArgumentException(
-				"Unknown cache group: {$group}"
+				esc_html( "Unknown cache group: {$group}" )
 			);
 		}
 
@@ -218,7 +218,7 @@ class Pantheon_Provider implements Provider {
 			return;
 		}
 
-		if ( $criteria = $this->is_current_ip( $ip ) ) { // phpcs:ignore WordPress.CodeAnalysis.AssignmentInCondition.Found, Squiz.PHP.DisallowMultipleAssignments.FoundInControlStructure
+		if ( $criteria = $this->is_current_ip( $ip ) ) { // phpcs:ignore Generic.CodeAnalysis.AssignmentInCondition.Found, Squiz.PHP.DisallowMultipleAssignments.FoundInControlStructure
 			$this->block_and_log( $ip, $criteria );
 		}
 	}

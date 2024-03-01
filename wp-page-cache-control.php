@@ -38,7 +38,7 @@ if ( ! file_exists( __DIR__ . '/vendor/wordpress-autoload.php' ) ) {
 	if ( ! class_exists( \Composer\InstalledVersions::class ) ) {
 		\add_action(
 			'admin_notices',
-			function() {
+			function () {
 				?>
 				<div class="notice notice-error">
 					<p><?php esc_html_e( 'Composer is not installed and wp-page-cache-control cannot load. Try using a `*-built` branch if the plugin is being loaded as a submodule.', 'wp-page-cache-control' ); ?></p>
@@ -84,7 +84,7 @@ function wp_page_cache_control(): Provider {
 
 		if ( empty( $wp_page_cache_control_provider ) || ! class_exists( $wp_page_cache_control_provider ) ) {
 			throw new InvalidArgumentException(
-				"Invalid provider class provided. Expected class to exist: {$wp_page_cache_control_provider}",
+				esc_html( "Invalid provider class provided. Expected class to exist: {$wp_page_cache_control_provider}" )
 			);
 		}
 
