@@ -5,8 +5,8 @@
   "main": "./types/index.d.ts",
   "types": "./types/index.d.ts",
   "engines": {
-    "node": ">=20",
-    "npm": ">=9"
+    "node": ">=18",
+    "npm": ">=8"
   },
   "private": false,
   "browserslist": [
