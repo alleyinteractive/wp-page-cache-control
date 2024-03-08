@@ -29,10 +29,10 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 define( 'WP_PAGE_CACHE_CONTROL_DIR', __DIR__ );
 
-// Check if Composer is installed (remove if Composer is not required for your plugin).
-if ( ! file_exists( __DIR__ . '/vendor/wordpress-autoload.php' ) ) {
-	// Check if we can resolve a Composer dependency before loading the plugin.
-	if ( ! class_exists( \Mantle\Support\Str::class ) ) {
+// Check if Composer is installed by checking for the existence of the Str class.
+if ( ! class_exists( \Mantle\Support\Str::class ) ) {
+	// Check if the autoloader exists. Otherwise, display an admin notice and bail.
+	if ( ! file_exists( __DIR__ . '/vendor/wordpress-autoload.php' ) ) {
 		\add_action(
 			'admin_notices',
 			function () {
@@ -45,10 +45,10 @@ if ( ! file_exists( __DIR__ . '/vendor/wordpress-autoload.php' ) ) {
 		);
 
 		return;
+	} else {
+		// Load Composer dependencies.
+		require_once __DIR__ . '/vendor/wordpress-autoload.php';
 	}
-} else {
-	// Load Composer dependencies.
-	require_once __DIR__ . '/vendor/wordpress-autoload.php';
 }
 
 // Load the plugin's main files.
