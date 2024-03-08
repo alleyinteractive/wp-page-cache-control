@@ -31,11 +31,8 @@ define( 'WP_PAGE_CACHE_CONTROL_DIR', __DIR__ );
 
 // Check if Composer is installed (remove if Composer is not required for your plugin).
 if ( ! file_exists( __DIR__ . '/vendor/wordpress-autoload.php' ) ) {
-	// Will also check for the presence of an already loaded Composer autoloader
-	// to see if the Composer dependencies have been installed in a parent
-	// folder. This is useful for when the plugin is loaded as a Composer
-	// dependency in a larger project.
-	if ( ! class_exists( \Composer\InstalledVersions::class ) ) {
+	// Check if we can resolve a Composer dependency before loading the plugin.
+	if ( ! class_exists( \Mantle\Support\Str::class ) ) {
 		\add_action(
 			'admin_notices',
 			function () {
