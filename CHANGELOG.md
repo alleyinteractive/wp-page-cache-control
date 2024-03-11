@@ -2,6 +2,10 @@
 
 All notable changes to `WP Page Cache Control` will be documented in this file.
 
+## v0.1.3 - 2024-03-08
+
+- Check for already-loaded Composer dependencies before loading them again.
+
 ## v0.1.2 - 2024-02-29
 
 - Fixing bug with Pantheon Provider not properly detecting the user's IP address.

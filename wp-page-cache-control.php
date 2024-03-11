@@ -3,7 +3,7 @@
  * Plugin Name: WP Page Cache Control
  * Plugin URI: https://github.com/alleyinteractive/wp-page-cache-control
  * Description: Control and modify the page cache for multiple hosting providers.
- * Version: 0.1.2
+ * Version: 0.1.3
  * Author: Sean Fisher
  * Author URI: https://github.com/alleyinteractive/wp-page-cache-control
  * Requires at least: 5.9
@@ -29,13 +29,10 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 define( 'WP_PAGE_CACHE_CONTROL_DIR', __DIR__ );
 
-// Check if Composer is installed (remove if Composer is not required for your plugin).
-if ( ! file_exists( __DIR__ . '/vendor/wordpress-autoload.php' ) ) {
-	// Will also check for the presence of an already loaded Composer autoloader
-	// to see if the Composer dependencies have been installed in a parent
-	// folder. This is useful for when the plugin is loaded as a Composer
-	// dependency in a larger project.
-	if ( ! class_exists( \Composer\InstalledVersions::class ) ) {
+// Check if Composer is installed by checking for the existence of the Str class.
+if ( ! class_exists( \Mantle\Support\Str::class ) ) {
+	// Check if the autoloader exists. Otherwise, display an admin notice and bail.
+	if ( ! file_exists( __DIR__ . '/vendor/wordpress-autoload.php' ) ) {
 		\add_action(
 			'admin_notices',
 			function () {
@@ -48,10 +45,10 @@ if ( ! file_exists( __DIR__ . '/vendor/wordpress-autoload.php' ) ) {
 		);
 
 		return;
+	} else {
+		// Load Composer dependencies.
+		require_once __DIR__ . '/vendor/wordpress-autoload.php';
 	}
-} else {
-	// Load Composer dependencies.
-	require_once __DIR__ . '/vendor/wordpress-autoload.php';
 }
 
 // Load the plugin's main files.
