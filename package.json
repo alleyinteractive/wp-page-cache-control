@@ -43,7 +43,7 @@
     "@types/jest": "^29.5.14",
     "@wordpress/babel-preset-default": "^7.14.0",
     "@wordpress/scripts": "^26.1.0",
-    "babel-jest": "^29.6.4",
+    "babel-jest": "^30.0.4",
     "check-node-version": "^4.2.1",
     "clean-webpack-plugin": "^4.0.0",
     "copy-webpack-plugin": "^13.0.0",
