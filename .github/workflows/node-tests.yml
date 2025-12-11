@@ -10,7 +10,7 @@ on:
 
 jobs:
   node-tests:
-    uses: alleyinteractive/.github/.github/workflows/node-tests.yml@main
+    uses: alleyinteractive/.github/.github/workflows/node-tests.yml@feature/deprecate-workflows
     with:
       node: 18
       run-audit: true

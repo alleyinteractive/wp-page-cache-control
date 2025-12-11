@@ -9,4 +9,4 @@ on:
 
 jobs:
   built-branch:
-    uses: alleyinteractive/.github/.github/workflows/built-branch.yml@main
+    uses: alleyinteractive/.github/.github/workflows/built-branch.yml@feature/deprecate-workflows

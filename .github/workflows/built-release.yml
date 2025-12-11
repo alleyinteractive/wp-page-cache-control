@@ -9,6 +9,6 @@ on:
 
 jobs:
   built-release:
-    uses: alleyinteractive/.github/.github/workflows/built-release.yml@main
+    uses: alleyinteractive/.github/.github/workflows/built-release.yml@feature/deprecate-workflows
     with:
       node: 20
