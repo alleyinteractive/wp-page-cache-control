@@ -45,6 +45,7 @@ jobs:
         uses: alleyinteractive/action-test-node@develop
         with:
           node-version: ${{ steps.nvmrc.outputs.version }}
+          test-command: 'npm run lint && npm test'
 
       - name: Run PHP Tests
         # See https://github.com/alleyinteractive/action-test-php for more options
