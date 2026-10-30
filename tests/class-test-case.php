@@ -2,13 +2,13 @@
 namespace Alley\WP\WP_Page_Cache_Control\Tests;
 
 use Alley\WP\WP_Page_Cache_Control\Concerns\Tests_Headers;
-use Mantle\Testkit\Test_Case as TestkitTest_Case;
+use Mantle\Testkit\TestCase as TestkitTestCase;
 use Alley\WP\WP_Page_Cache_Control\Header;
 
 /**
  * WP Page Cache Control Base Test Case
  */
-abstract class Test_Case extends TestkitTest_Case {
+abstract class Test_Case extends TestkitTestCase {
 	use Tests_Headers;
 
 	protected function setUp(): void {

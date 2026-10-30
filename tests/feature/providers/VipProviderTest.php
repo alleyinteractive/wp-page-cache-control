@@ -10,7 +10,7 @@ use WPCOM_VIP_Cache_Manager;
 /**
  * WordPress VIP Provider
  */
-class Test_VIP_Provider extends Test_Case {
+class VipProviderTest extends Test_Case {
 	protected VIP_Provider $provider;
 
 	protected function setUp(): void {
@@ -30,7 +30,9 @@ class Test_VIP_Provider extends Test_Case {
 	protected function tearDown(): void {
 		parent::tearDown();
 
-		Vary_Cache::unload();
+		if ( class_exists( Vary_Cache::class ) ) {
+			Vary_Cache::unload();
+		}
 
 		// phpcs:ignore WordPressVIPMinimum.Variables.RestrictedVariables.cache_constraints___SERVER__HTTP_USER_AGENT__
 		unset( $_SERVER['HTTP_TRUE_CLIENT_IP'], $_SERVER['HTTP_X_FORWARDED_FOR'], $_SERVER['HTTP_USER_AGENT'] );

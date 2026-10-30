@@ -2,14 +2,10 @@
 	bootstrap="tests/bootstrap.php"
 	backupGlobals="false"
 	colors="true"
-	convertErrorsToExceptions="true"
-	convertNoticesToExceptions="true"
-	convertWarningsToExceptions="true"
-	printerClass="NunoMaduro\Collision\Adapters\Phpunit\Printer"
 >
 	<testsuites>
 		<testsuite name="Feature">
-			<directory prefix="test-" suffix=".php">tests/feature</directory>
+			<directory suffix="Test.php">tests/feature</directory>
 		</testsuite>
 	</testsuites>
 </phpunit>

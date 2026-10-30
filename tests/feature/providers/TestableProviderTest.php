@@ -4,7 +4,7 @@ namespace Alley\WP\WP_Page_Cache_Control\Tests\Feature\Providers;
 use Alley\WP\WP_Page_Cache_Control\Providers\Testable_Provider;
 use Alley\WP\WP_Page_Cache_Control\Tests\Test_Case;
 
-class Test_Testable_Provider extends Test_Case {
+class TestableProviderTest extends Test_Case {
 	protected Testable_Provider $provider;
 
 	protected function setUp(): void {
