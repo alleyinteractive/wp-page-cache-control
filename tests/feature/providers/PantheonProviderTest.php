@@ -8,7 +8,7 @@ use Alley\WP\WP_Page_Cache_Control\Tests\Test_Case;
 /**
  * Pantheon Advanced Page Cache Provider
  */
-class Test_Pantheon_Provider extends Test_Case {
+class PantheonProviderTest extends Test_Case {
 	protected Pantheon_Provider $provider;
 
 	protected function setUp(): void {

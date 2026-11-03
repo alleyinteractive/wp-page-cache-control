@@ -4,7 +4,7 @@ namespace Alley\WP\WP_Page_Cache_Control\Tests\Feature;
 use Alley\WP\WP_Page_Cache_Control\Tests\Test_Case;
 use Alley\WP\WP_Page_Cache_Control\Header;
 
-class Test_Header extends Test_Case {
+class HeaderTest extends Test_Case {
 	public function test_send_headers() {
 		static::assertHeaderNotSent( 'x-example-header' );
 
@@ -27,7 +27,7 @@ class Test_Header extends Test_Case {
 		Header::no_cache();
 
 		static::assertHeaderSent( 'cache-control' );
-		static::assertHeaderSent( 'cache-control', 'no-cache, must-revalidate, max-age=0' );
+		static::assertHeaderSent( 'cache-control', wp_get_nocache_headers()['Cache-Control'] );
 	}
 
 	public function test_max_age() {
